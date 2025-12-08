@@ -1,0 +1,43 @@
+version: 0.0.1
+type: plugin
+author: zenmux
+name: zenmux
+label:
+  en_US: zenmux
+  ja_JP: zenmux
+  zh_Hans: zenmux
+  pt_BR: zenmux
+description:
+  en_US: Plugin to access models provided by zenmux.ai
+  ja_JP: Plugin to access models provided by zenmux.ai
+  zh_Hans: Plugin to access models provided by zenmux.ai
+  pt_BR: Plugin to access models provided by zenmux.ai
+icon: icon.svg
+icon_dark: icon-dark.svg
+resource:
+  memory: 268435456
+  permission:
+    model:
+      enabled: true
+      llm: true
+      text_embedding: false
+      rerank: false
+      tts: false
+      speech2text: false
+      moderation: false
+plugins:
+  models:
+    - provider/zenmux.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: 1.10.1
+created_at: 2025-12-08T11:39:26.455035492+08:00
+privacy: PRIVACY.md
+verified: false
