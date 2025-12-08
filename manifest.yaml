@@ -1,12 +1,9 @@
 version: 0.0.1
 type: plugin
 author: zenmux
-name: zenmux
+name: zenmux-dify-plugin
 label:
-  en_US: zenmux
-  ja_JP: zenmux
-  zh_Hans: zenmux
-  pt_BR: zenmux
+  en_US: ZenMux
 description:
   en_US: Plugin to access models provided by zenmux.ai
   ja_JP: Plugin to access models provided by zenmux.ai

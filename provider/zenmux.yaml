@@ -1,22 +1,22 @@
 provider: zenmux
 label:
-  en_US: "Zenmux"
+  en_US: "ZenMux"
 description:
   en_US: "Models provided by zenmux."
   zh_Hans: "Zenmux 提供的模型。"
   ja_JP: "Zenmuxが提供するモデル。"
 icon_small:
-  en_US: "icon_s_en.svg"
+  en_US: "icon.svg"
 icon_large:
-  en_US: "icon_l_en.svg"
+  en_US: "icon.svg"
 background: "#E5E7EB"
 help:
   title:
-    en_US: "Get your API Key from zenmux"
+    en_US: "Get your API Key from zenmux.ai"
     zh_Hans: "从 Zenmux 获取 API Key"
     ja_JP: "ZenmuxからAPIキーを取得"
   url:
-    en_US: "https://__put_your_url_here__/account/api-keys"
+    en_US: "https://zenmux.ai/settings/keys"
 supported_model_types:
   - llm
 configurate_methods:
@@ -33,17 +33,98 @@ model_credential_schema:
       zh_Hans: 输入模型名称
       ja_JP: モデル名を入力してください
   credential_form_schemas:
-    - variable: openai_api_key
+    - variable: api_key
       label:
         en_US: API Key
       type: secret-input
-      required: true
+      required: false
       placeholder:
         zh_Hans: 在此输入您的 API Key
         en_US: Enter your API Key
+    - variable: api
+      label:
+        en_US: Inference API
+      type: select
+      options:
+        - label:
+            en_US: OpenAI - Chat Completions
+            zh_Hans: OpenAI chat 兼容接口
+          value: openai_chat_completions
+        - label:
+            en_US: Anthropic - Messages
+            zh_Hans: Anthropic messages 兼容接口
+          value: anthropic_messages
+        - label:
+            en_US: Google - Gemini API
+            zh_Hans: Google Gemini API 兼容接口
+          value: google_gemini_api
+      required: true
+      default: openai_chat_completions
+      show_on:
+        - variable: __model_type
+          value: llm
+    - variable: context_size
+      label:
+        en_US: Model context size
+        zh_Hans: 模型上下文长度
+      placeholder:
+        en_US: Enter your Model context size
+        zh_Hans: 在此输入您的模型上下文长度
+      type: text-input
+      required: true
+      default: '4096'
+      show_on:
+        - variable: __model_type
+          value: llm
+    - variable: max_tokens_to_sample
+      label:
+        en_US: Upper bound for max tokens
+        zh_Hans: 最大 token 上限
+      type: text-input
+      default: '4096'
+      show_on:
+        - variable: __model_type
+          value: llm
+    - variable: vision_support
+      label:
+        en_US: Vision Support
+        zh_Hans: 是否支持 Vision
+      type: radio
+      options:
+        - label:
+            en_US: 'Yes'
+            zh_Hans: 是
+          value: support
+        - label:
+            en_US: 'No'
+            zh_Hans: 否
+          value: no_support
+      required: false
+      default: no_support
+      show_on:
+        - value: llm
+          variable: __model_type
+    - variable: function_calling_type
+      label:
+        en_US: Function calling
+      type: select
+      options:
+        - label:
+            en_US: Not Support
+            zh_Hans: 不支持
+          value: no_call
+        - label:
+            en_US: Support
+            zh_Hans: 支持
+          value: tool_call
+      required: false
+      default: no_call
+      show_on:
+        - value: llm
+          variable: __model_type
 provider_credential_schema:
   credential_form_schemas:
-    - variable: openai_api_key
+    - variable: api_key
       label:
         en_US: API Key
       type: secret-input
@@ -57,6 +138,6 @@ models:
       - "models/llm/*.yaml"
 extra:
   python:
-    provider_source: provider/openai.py
+    provider_source: provider/zenmux.py
     model_sources:
       - "models/llm/llm.py"

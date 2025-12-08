@@ -17,7 +17,8 @@ class ZenmuxModelProvider(ModelProvider):
         :param credentials: provider credentials, credentials form defined in `provider_credential_schema`.
         """
         try:
-            pass
+            model_instance = self.get_model_instance(ModelType.LLM)
+            model_instance.validate_credentials(model='openai/gpt-4o-mini', credentials=credentials)
         except CredentialsValidateFailedError as ex:
             raise ex
         except Exception as ex:
