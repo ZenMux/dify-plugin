@@ -1,7 +1,7 @@
 model: anthropic/claude-opus-4.5
 label:
-  en_US: Claude Opus 4.5
-  zh_Hans: Claude Opus 4.5
+  en_US: "Anthropic: Claude Opus 4.5"
+  zh_Hans: "Anthropic: Claude Opus 4.5"
 model_type: llm
 features:
   - agent-thought

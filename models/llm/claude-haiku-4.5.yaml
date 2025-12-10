@@ -1,7 +1,7 @@
 model: anthropic/claude-haiku-4.5
 label:
-  zh_Hans: Claude Haiku 4.5
-  en_US: Claude Haiku 4.5
+  zh_Hans: "Anthropic: Claude Haiku 4.5"
+  en_US: "Anthropic: Claude Haiku 4.5"
 model_type: llm
 features:
   - agent-thought

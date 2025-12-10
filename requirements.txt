@@ -1,1 +1,2 @@
 dify_plugin>=0.4.0,<0.7.0,!=0.6.2
+google-genai==1.52.0
