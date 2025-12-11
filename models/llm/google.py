@@ -39,8 +39,6 @@ from google.genai import errors, types
 
 from .utils import FileCache, UNSUPPORTED_DOCUMENT_TYPES, UNSUPPORTED_EXTENSIONS
 
-file_cache = FileCache()
-
 _MMC = TypeVar("_MMC", bound=MultiModalPromptMessageContent)
 
 IMAGE_GENERATION_MODELS = {
@@ -125,14 +123,9 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
         return message_text
 
     @staticmethod
-    def _upload_file_content_to_google(
-        message_content: _MMC, genai_client: genai.Client, file_server_url_prefix: str | None = None
+    def _retrieve_file_content(
+        message_content: _MMC, file_server_url_prefix: str | None = None
     ) -> Tuple[str, str]:
-
-        key = f"{message_content.type.value}:{hash(message_content.data)}"
-        if file_cache.exists(key):
-            value = file_cache.get(key).split(";")
-            return value[0], value[1]
 
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             if message_content.base64_data:
@@ -161,16 +154,8 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
             ):
                 pending_mime_type = "text/markdown"
 
-        file = genai_client.files.upload(
-            file=temp_file.name, config=types.UploadFileConfig(mime_type=pending_mime_type)
-        )
-
-        while file.state.name == "PROCESSING":
-            time.sleep(5)
-            file = genai_client.files.get(name=file.name)
-
-        # google will delete your upload files in 2 days.
-        file_cache.setex(key, 47 * 60 * 60, f"{file.uri};{file.mime_type}")
+        with open(temp_file.name, 'rb') as f:
+            file_data = f.read()
 
         try:
             os.unlink(temp_file.name)
@@ -178,7 +163,7 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
             # windows may raise permission error
             pass
 
-        return file.uri, file.mime_type
+        return file_data, pending_mime_type
 
     @staticmethod
     def _render_grounding_source(grounding_metadata: types.GroundingMetadata) -> str:
@@ -549,10 +534,8 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
 
                     # Upload only if the file type is supported
                     if should_upload:
-                        uri, mime_type = self._upload_file_content_to_google(
-                            obj, genai_client, file_server_url_prefix
-                        )
-                        _unverified_part = types.Part.from_uri(file_uri=uri, mime_type=mime_type)
+                        file_data, mime_type = self._retrieve_file_content(obj, file_server_url_prefix)
+                        _unverified_part = types.Part.from_bytes(data=file_data, mime_type=mime_type)
                         if is_assistant_tree:
                             _unverified_part.thought_signature = DEFAULT_THOUGHT_SIGNATURE
                         parts_.append(_unverified_part)
