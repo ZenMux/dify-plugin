@@ -21,6 +21,19 @@ def _register_models():
         'google/gemini-2.5-pro': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-3-pro-preview': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-3-pro-image-preview': ZenMuxGoogleLargeLanguageModel,
+        'openai/gpt-4o-mini': ZenMuxOpenAICCLargeLanguageModel,
+        'openai/gpt-4o': ZenMuxOpenAICCLargeLanguageModel,
+        'openai/gpt-4.1-mini': ZenMuxOpenAICCLargeLanguageModel,
+        'openai/gpt-4.1-nano': ZenMuxOpenAICCLargeLanguageModel,
+        'openai/gpt-4.1': ZenMuxOpenAICCLargeLanguageModel,
+        'openai/o4-mini': ZenMuxOpenAICCLargeLanguageModel,
+        'openai/gpt-5-mini': ZenMuxOpenAICCLargeLanguageModel,
+        'openai/gpt-5-nano': ZenMuxOpenAICCLargeLanguageModel,
+        'openai/gpt-5': ZenMuxOpenAICCLargeLanguageModel,
+        'openai/gpt-5-pro': ZenMuxOpenAICCLargeLanguageModel,
+        'openai/gpt-5.1': ZenMuxOpenAICCLargeLanguageModel,
+        'openai/gpt-5.2': ZenMuxOpenAICCLargeLanguageModel,
+        'openai/gpt-5.2-pro': ZenMuxOpenAICCLargeLanguageModel,
         '*': ZenMuxOpenAICCLargeLanguageModel
     })
 
