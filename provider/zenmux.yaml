@@ -41,28 +41,28 @@ model_credential_schema:
       placeholder:
         zh_Hans: 在此输入您的 API Key
         en_US: Enter your API Key
-    - variable: api
-      label:
-        en_US: Inference API
-      type: select
-      options:
-        - label:
-            en_US: OpenAI - Chat Completions
-            zh_Hans: OpenAI chat 兼容接口
-          value: openai_chat_completions
-        - label:
-            en_US: Anthropic - Messages
-            zh_Hans: Anthropic messages 兼容接口
-          value: anthropic_messages
-        - label:
-            en_US: Google - Gemini API
-            zh_Hans: Google Gemini API 兼容接口
-          value: google_gemini_api
-      required: true
-      default: openai_chat_completions
-      show_on:
-        - variable: __model_type
-          value: llm
+          #     - variable: api
+          #       label:
+          #         en_US: Inference API
+          #       type: select
+          #       options:
+          #         - label:
+          #             en_US: OpenAI - Chat Completions
+          #             zh_Hans: OpenAI chat 兼容接口
+          #           value: openai_chat_completions
+          #         - label:
+          #             en_US: Anthropic - Messages
+          #             zh_Hans: Anthropic messages 兼容接口
+          #           value: anthropic_messages
+          #         - label:
+          #             en_US: Google - Gemini API
+          #             zh_Hans: Google Gemini API 兼容接口
+          #           value: google_gemini_api
+          #       required: true
+          #       default: openai_chat_completions
+          #       show_on:
+          #         - variable: __model_type
+          #           value: llm
     - variable: context_size
       label:
         en_US: Model context size
