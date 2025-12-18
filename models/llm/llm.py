@@ -21,6 +21,7 @@ def _register_models():
         'google/gemini-2.5-pro': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-3-pro-preview': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-3-pro-image-preview': ZenMuxGoogleLargeLanguageModel,
+        'google/gemini-3-flash-preview': ZenMuxGoogleLargeLanguageModel,
         'openai/gpt-4o-mini': ZenMuxOpenAICCLargeLanguageModel,
         'openai/gpt-4o': ZenMuxOpenAICCLargeLanguageModel,
         'openai/gpt-4.1-mini': ZenMuxOpenAICCLargeLanguageModel,
