@@ -23,7 +23,7 @@ class ZenMuxLargeLanguageModel(LargeLanguageModel):
                 model_schema_list = model_class_map[model_class]
             model_schema_list.append(model_schema)
 
-        default_model_class = MODEL_CLASS_MAP["*"]
+        default_model_class = MODEL_CLASS_MAP.get("*")
 
         model_map = {}
         for model_class in model_class_map:
@@ -37,8 +37,55 @@ class ZenMuxLargeLanguageModel(LargeLanguageModel):
 
         self.model_map = model_map
 
+    def _get_model_class_for_model(self, model: str):
+        """
+        Get the appropriate model implementation class for a given model name.
+        Supports custom models by checking model name prefixes.
+
+        :param model: Model name (e.g., 'deepseek/deepseek-chat:deepseek')
+        :return: Model implementation instance
+        """
+        # First, try exact match
+        if model in self.model_map:
+            return self.model_map[model]
+
+        # Extract base model name without provider slug
+        # Format: 'model:provider' or just 'model'
+        base_model = model.split(":")[0] if ":" in model else model
+
+        # Try exact match with base model name
+        if base_model in self.model_map:
+            return self.model_map[base_model]
+
+        # Custom model routing based on prefix
+        # Google models
+        if base_model.startswith("google/gemini"):
+            from .google import ZenMuxGoogleLargeLanguageModel
+            # Find a Google model instance to use
+            for key, value in self.model_map.items():
+                if key.startswith("google/"):
+                    return value
+
+        # Anthropic models (use OpenAI CC)
+        if base_model.startswith("anthropic/"):
+            from .openai import ZenMuxOpenAICCLargeLanguageModel
+            for key, value in self.model_map.items():
+                if key.startswith("anthropic/"):
+                    return value
+
+        # OpenAI models
+        if base_model.startswith("openai/"):
+            from .openai import ZenMuxOpenAICCLargeLanguageModel
+            for key, value in self.model_map.items():
+                if key.startswith("openai/"):
+                    return value
+
+        # For DeepSeek and other custom models, use OpenAI CC as default
+        # User example: deepseek/deepseek-chat:deepseek
+        return self.default_model
+
     def validate_credentials(self, model: str, *args, **kwargs):
-        model_obj = self.model_map.get(model, self.default_model)
+        model_obj = self._get_model_class_for_model(model)
         return model_obj.validate_credentials(model, *args, **kwargs)
 
     @property
@@ -46,9 +93,13 @@ class ZenMuxLargeLanguageModel(LargeLanguageModel):
         return self.default_model._invoke_error_mapping
 
     def _invoke(self, model: str, *args, **kwargs):
-        model_obj = self.model_map.get(model, self.default_model)
+        model_obj = self._get_model_class_for_model(model)
         return model_obj._invoke(model, *args, **kwargs)
 
     def get_num_tokens(self, model: str, *args, **kwargs):
-        model_obj = self.model_map.get(model, self.default_model)
+        model_obj = self._get_model_class_for_model(model)
         return model_obj.get_num_tokens(model, *args, **kwargs)
+
+    def get_customizable_model_schema(self, model: str, credentials: dict):
+        model_obj = self._get_model_class_for_model(model)
+        return model_obj.get_customizable_model_schema(model, credentials)

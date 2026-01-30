@@ -8,6 +8,7 @@ def _register_models():
     from .google import ZenMuxGoogleLargeLanguageModel
 
     MODEL_CLASS_MAP.update({
+        # Anthropic Models - Custom models with anthropic/ prefix will use OpenAI CC
         'anthropic/claude-3.7-sonnet': ZenMuxOpenAICCLargeLanguageModel,
         'anthropic/claude-sonnet-4': ZenMuxOpenAICCLargeLanguageModel,
         'anthropic/claude-opus-4': ZenMuxOpenAICCLargeLanguageModel,
@@ -15,6 +16,8 @@ def _register_models():
         'anthropic/claude-sonnet-4.5': ZenMuxOpenAICCLargeLanguageModel,
         'anthropic/claude-opus-4.5': ZenMuxOpenAICCLargeLanguageModel,
         'anthropic/claude-haiku-4.5': ZenMuxOpenAICCLargeLanguageModel,
+
+        # Google Models - Custom models with google/ prefix will use Google API
         'google/gemini-2.5-flash-lite': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-2.5-flash': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-2.5-flash-image': ZenMuxGoogleLargeLanguageModel,
@@ -22,6 +25,8 @@ def _register_models():
         'google/gemini-3-pro-preview': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-3-pro-image-preview': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-3-flash-preview': ZenMuxGoogleLargeLanguageModel,
+
+        # OpenAI Models - Custom models with openai/ prefix will use OpenAI CC
         'openai/gpt-4o-mini': ZenMuxOpenAICCLargeLanguageModel,
         'openai/gpt-4o': ZenMuxOpenAICCLargeLanguageModel,
         'openai/gpt-4.1-mini': ZenMuxOpenAICCLargeLanguageModel,
@@ -35,6 +40,9 @@ def _register_models():
         'openai/gpt-5.1': ZenMuxOpenAICCLargeLanguageModel,
         'openai/gpt-5.2': ZenMuxOpenAICCLargeLanguageModel,
         'openai/gpt-5.2-pro': ZenMuxOpenAICCLargeLanguageModel,
+
+        # Wildcard routing for custom models
+        # Most custom models use OpenAI-compatible API
         '*': ZenMuxOpenAICCLargeLanguageModel
     })
 

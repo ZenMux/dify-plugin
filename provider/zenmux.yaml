@@ -122,6 +122,21 @@ model_credential_schema:
       show_on:
         - value: llm
           variable: __model_type
+    - variable: provider_slug
+      label:
+        en_US: Provider Slug (Optional)
+        zh_Hans: Provider Slug（可选）
+      type: text-input
+      required: false
+      placeholder:
+        en_US: e.g., amazon-bedrock, anthropic, google-vertex
+        zh_Hans: 例如：amazon-bedrock, anthropic, google-vertex
+      help:
+        en_US: Specify a provider slug to route requests to a specific provider. Format will be "model:provider". Leave empty to use default routing.
+        zh_Hans: 指定 provider slug 以将请求路由到特定的 provider。格式为"model:provider"。留空则使用默认路由。
+      show_on:
+        - value: llm
+          variable: __model_type
 provider_credential_schema:
   credential_form_schemas:
     - variable: api_key

@@ -55,6 +55,25 @@ DEFAULT_THOUGHT_SIGNATURE: bytes = b"skip_thought_signature_validator"
 class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
     is_thinking = None
 
+    @staticmethod
+    def _apply_provider_routing(model: str, credentials: dict) -> str:
+        """
+        Apply provider routing to model name if provider_slug is specified in credentials.
+
+        :param model: Original model name
+        :param credentials: Model credentials containing optional provider_slug
+        :return: Model name with provider routing applied (format: model:provider or original model)
+        """
+        provider_slug = credentials.get("provider_slug", "").strip()
+        if provider_slug:
+            # If model already has provider suffix, replace it; otherwise append
+            if ":" in model:
+                base_model = model.split(":")[0]
+                return f"{base_model}:{provider_slug}"
+            else:
+                return f"{model}:{provider_slug}"
+        return model
+
     def _convert_messages_to_prompt(self, messages: list[PromptMessage]) -> str:
         """
         Format a list of messages into a full prompt for the Google model
@@ -868,8 +887,10 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
         :return: full response or stream response chunk generator result
         """
         _ = user
+        # Apply provider routing if provider_slug is specified
+        routed_model = self._apply_provider_routing(model, credentials)
         return self._generate(
-            model, credentials, prompt_messages, model_parameters, tools, stop, stream, user
+            routed_model, credentials, prompt_messages, model_parameters, tools, stop, stream, user
         )
 
     def _generate(
@@ -987,10 +1008,12 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
         :return:
         """
         try:
+            # Apply provider routing if provider_slug is specified
+            routed_model = self._apply_provider_routing(model, credentials)
             genai_client = genai.Client(
                 api_key=credentials["google_api_key"],
                 http_options=types.HttpOptions(base_url=credentials.get("google_base_url", None)),
             )
-            genai_client.models.count_tokens(model=model, contents="ping")
+            genai_client.models.count_tokens(model=routed_model, contents="ping")
         except Exception as ex:
             raise CredentialsValidateFailedError(str(ex))

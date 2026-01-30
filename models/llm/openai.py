@@ -34,6 +34,25 @@ class ZenMuxOpenAICCLargeLanguageModel(OAICompatLargeLanguageModel):
     Model class for zenmux large language model based on OpenAI Chat Completions compatible api.
     """
 
+    @staticmethod
+    def _apply_provider_routing(model: str, credentials: dict) -> str:
+        """
+        Apply provider routing to model name if provider_slug is specified in credentials.
+
+        :param model: Original model name
+        :param credentials: Model credentials containing optional provider_slug
+        :return: Model name with provider routing applied (format: model:provider or original model)
+        """
+        provider_slug = credentials.get("provider_slug", "").strip()
+        if provider_slug:
+            # If model already has provider suffix, replace it; otherwise append
+            if ":" in model:
+                base_model = model.split(":")[0]
+                return f"{base_model}:{provider_slug}"
+            else:
+                return f"{model}:{provider_slug}"
+        return model
+
     def _update_credential(self, model: str, credentials: dict):
         credentials["endpoint_url"] = "https://zenmux.ai/api/v1"
         credentials["mode"] = self.get_model_mode(model).value
@@ -133,6 +152,9 @@ class ZenMuxOpenAICCLargeLanguageModel(OAICompatLargeLanguageModel):
     ) -> Union[LLMResult, Generator]:
         self._update_credential(model, credentials)
 
+        # Apply provider routing if provider_slug is specified
+        routed_model = self._apply_provider_routing(model, credentials)
+
         # Only convert file content to text descriptions for models that don't support vision
         model_schema = self.get_model_schema(model, credentials)
         if not (model_schema and ModelFeature.VISION in (model_schema.features or [])):
@@ -146,7 +168,7 @@ class ZenMuxOpenAICCLargeLanguageModel(OAICompatLargeLanguageModel):
             stream_options["include_usage"] = True
 
         return self._generate(
-            model, credentials, prompt_messages, model_parameters, tools, stop, stream, user
+            routed_model, credentials, prompt_messages, model_parameters, tools, stop, stream, user
         )
 
     def get_num_tokens(
@@ -157,11 +179,13 @@ class ZenMuxOpenAICCLargeLanguageModel(OAICompatLargeLanguageModel):
         tools: Optional[list[PromptMessageTool]] = None,
     ) -> int:
         self._update_credential(model, credentials)
-        return super().get_num_tokens(model, credentials, prompt_messages, tools)
+        routed_model = self._apply_provider_routing(model, credentials)
+        return super().get_num_tokens(routed_model, credentials, prompt_messages, tools)
 
     def validate_credentials(self, model: str, credentials: dict) -> None:
         self._update_credential(model, credentials)
-        return super().validate_credentials(model, credentials)
+        routed_model = self._apply_provider_routing(model, credentials)
+        return super().validate_credentials(routed_model, credentials)
 
     def get_customizable_model_schema(
         self, model: str, credentials: dict
