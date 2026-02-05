@@ -49,37 +49,6 @@ class ZenMuxLargeLanguageModel(LargeLanguageModel):
         if model in self.model_map:
             return self.model_map[model]
 
-        # Extract base model name without provider slug
-        # Format: 'model:provider' or just 'model'
-        base_model = model.split(":")[0] if ":" in model else model
-
-        # Try exact match with base model name
-        if base_model in self.model_map:
-            return self.model_map[base_model]
-
-        # Custom model routing based on prefix
-        # Google models
-        if base_model.startswith("google/gemini"):
-            from .google import ZenMuxGoogleLargeLanguageModel
-            # Find a Google model instance to use
-            for key, value in self.model_map.items():
-                if key.startswith("google/"):
-                    return value
-
-        # Anthropic models (use OpenAI CC)
-        if base_model.startswith("anthropic/"):
-            from .openai import ZenMuxOpenAICCLargeLanguageModel
-            for key, value in self.model_map.items():
-                if key.startswith("anthropic/"):
-                    return value
-
-        # OpenAI models
-        if base_model.startswith("openai/"):
-            from .openai import ZenMuxOpenAICCLargeLanguageModel
-            for key, value in self.model_map.items():
-                if key.startswith("openai/"):
-                    return value
-
         # For DeepSeek and other custom models, use OpenAI CC as default
         # User example: deepseek/deepseek-chat:deepseek
         return self.default_model

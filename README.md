@@ -1,7 +1,7 @@
 ## ZenMux
 
 **Author:** zenmux
-**Version:** 0.0.5
+**Version:** 0.0.6
 **Type:** model
 
 ### Description
