@@ -122,6 +122,7 @@ model_credential_schema:
       show_on:
         - value: llm
           variable: __model_type
+
 provider_credential_schema:
   credential_form_schemas:
     - variable: api_key
