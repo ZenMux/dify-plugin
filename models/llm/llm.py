@@ -15,6 +15,7 @@ def _register_models():
         'anthropic/claude-opus-4.1': ZenMuxOpenAICCLargeLanguageModel,
         'anthropic/claude-sonnet-4.5': ZenMuxOpenAICCLargeLanguageModel,
         'anthropic/claude-opus-4.5': ZenMuxOpenAICCLargeLanguageModel,
+        'anthropic/claude-opus-4.6': ZenMuxOpenAICCLargeLanguageModel,
         'anthropic/claude-haiku-4.5': ZenMuxOpenAICCLargeLanguageModel,
 
         # Google Models - Custom models with google/ prefix will use Google API
