@@ -14,6 +14,7 @@ def _register_models():
         'anthropic/claude-opus-4': ZenMuxOpenAICCLargeLanguageModel,
         'anthropic/claude-opus-4.1': ZenMuxOpenAICCLargeLanguageModel,
         'anthropic/claude-sonnet-4.5': ZenMuxOpenAICCLargeLanguageModel,
+        'anthropic/claude-sonnet-4.6': ZenMuxOpenAICCLargeLanguageModel,
         'anthropic/claude-opus-4.5': ZenMuxOpenAICCLargeLanguageModel,
         'anthropic/claude-opus-4.6': ZenMuxOpenAICCLargeLanguageModel,
         'anthropic/claude-haiku-4.5': ZenMuxOpenAICCLargeLanguageModel,
@@ -26,6 +27,8 @@ def _register_models():
         'google/gemini-3-pro-preview': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-3-pro-image-preview': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-3-flash-preview': ZenMuxGoogleLargeLanguageModel,
+        'google/gemini-3.1-pro-preview': ZenMuxGoogleLargeLanguageModel,
+        'google/gemini-3.1-flash-image-preview': ZenMuxGoogleLargeLanguageModel,
 
         # OpenAI Models - Custom models with openai/ prefix will use OpenAI CC
         'openai/gpt-4o-mini': ZenMuxOpenAICCLargeLanguageModel,
