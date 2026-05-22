@@ -6,20 +6,23 @@ def _register_models():
     from .zenmux import MODEL_CLASS_MAP
     from .openai import ZenMuxOpenAICCLargeLanguageModel
     from .google import ZenMuxGoogleLargeLanguageModel
+    from .anthropic_llm import ZenMuxAnthropicLargeLanguageModel
 
     MODEL_CLASS_MAP.update({
-        # Anthropic Models - Custom models with anthropic/ prefix will use OpenAI CC
-        'anthropic/claude-3.7-sonnet': ZenMuxOpenAICCLargeLanguageModel,
-        'anthropic/claude-sonnet-4': ZenMuxOpenAICCLargeLanguageModel,
-        'anthropic/claude-opus-4': ZenMuxOpenAICCLargeLanguageModel,
-        'anthropic/claude-opus-4.1': ZenMuxOpenAICCLargeLanguageModel,
-        'anthropic/claude-sonnet-4.5': ZenMuxOpenAICCLargeLanguageModel,
-        'anthropic/claude-sonnet-4.6': ZenMuxOpenAICCLargeLanguageModel,
-        'anthropic/claude-opus-4.5': ZenMuxOpenAICCLargeLanguageModel,
-        'anthropic/claude-opus-4.6': ZenMuxOpenAICCLargeLanguageModel,
-        'anthropic/claude-haiku-4.5': ZenMuxOpenAICCLargeLanguageModel,
+        # Anthropic Models - use native Anthropic endpoint for full feature support
+        # Benefits: native prompt caching, thinking mode without field mapping,
+        # zero translation overhead, immediate access to new Anthropic features
+        'anthropic/claude-3.7-sonnet': ZenMuxAnthropicLargeLanguageModel,
+        'anthropic/claude-sonnet-4': ZenMuxAnthropicLargeLanguageModel,
+        'anthropic/claude-opus-4': ZenMuxAnthropicLargeLanguageModel,
+        'anthropic/claude-opus-4.1': ZenMuxAnthropicLargeLanguageModel,
+        'anthropic/claude-sonnet-4.5': ZenMuxAnthropicLargeLanguageModel,
+        'anthropic/claude-sonnet-4.6': ZenMuxAnthropicLargeLanguageModel,
+        'anthropic/claude-opus-4.5': ZenMuxAnthropicLargeLanguageModel,
+        'anthropic/claude-opus-4.6': ZenMuxAnthropicLargeLanguageModel,
+        'anthropic/claude-haiku-4.5': ZenMuxAnthropicLargeLanguageModel,
 
-        # Google Models - Custom models with google/ prefix will use Google API
+        # Google Models - use Google Vertex AI endpoint
         'google/gemini-2.5-flash-lite': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-2.5-flash': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-2.5-flash-image': ZenMuxGoogleLargeLanguageModel,
@@ -30,7 +33,7 @@ def _register_models():
         'google/gemini-3.1-pro-preview': ZenMuxGoogleLargeLanguageModel,
         'google/gemini-3.1-flash-image-preview': ZenMuxGoogleLargeLanguageModel,
 
-        # OpenAI Models - Custom models with openai/ prefix will use OpenAI CC
+        # OpenAI Models
         'openai/gpt-4o-mini': ZenMuxOpenAICCLargeLanguageModel,
         'openai/gpt-4o': ZenMuxOpenAICCLargeLanguageModel,
         'openai/gpt-4.1-mini': ZenMuxOpenAICCLargeLanguageModel,
@@ -46,7 +49,6 @@ def _register_models():
         'openai/gpt-5.2-pro': ZenMuxOpenAICCLargeLanguageModel,
 
         # Wildcard routing for custom models
-        # Most custom models use OpenAI-compatible API
         '*': ZenMuxOpenAICCLargeLanguageModel
     })
 
