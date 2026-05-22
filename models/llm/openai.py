@@ -163,6 +163,11 @@ class ZenMuxOpenAICCLargeLanguageModel(OAICompatLargeLanguageModel):
         self._update_credential(model, credentials)
         return super().validate_credentials(model, credentials)
 
+    def _wrap_thinking_by_reasoning_content(self, delta: dict, is_reasoning: bool) -> tuple[str, bool]:
+        if "reasoning" in delta and "reasoning_content" not in delta:
+            delta["reasoning_content"] = delta.pop("reasoning")
+        return super()._wrap_thinking_by_reasoning_content(delta, is_reasoning)
+
     def get_customizable_model_schema(
         self, model: str, credentials: dict
     ) -> AIModelEntity:
