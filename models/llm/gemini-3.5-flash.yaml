@@ -1,0 +1,115 @@
+model: google/gemini-3.5-flash
+label:
+  en_US: "Google: Gemini 3.5 Flash"
+  zh_Hans: "Google: Gemini 3.5 Flash"
+model_type: llm
+features:
+  - tool-call
+  - multi-tool-call
+  - agent-thought
+  - vision
+  - stream-tool-call
+  - document
+  - video
+  - audio
+model_properties:
+  mode: chat
+  context_size: 1048576
+parameter_rules:
+  - name: temperature
+    type: float
+    required: true
+    default: 1
+    min: 0
+    max: 2
+    label:
+      en_US: Temperature
+      zh_Hans: 温度
+    help:
+      en_US: Best results at default 1.0. Lower values may impact reasoning.
+      zh_Hans: 使用默认值 1.0 可获得最佳效果。数值过低可能会影响推理能力。
+  - name: include_thoughts
+    type: boolean
+    required: true
+    default: false
+    label:
+      en_US: Include thoughts
+      zh_Hans: 返回思考过程
+    help:
+      en_US: Indicates whether to include thoughts in the response.
+      zh_Hans: 是否返回思考过程。
+  - name: thinking_level
+    type: string
+    required: true
+    default: "High"
+    options:
+      - Low
+      - High
+    label:
+      en_US: Thinking level
+      zh_Hans: 思考层级
+    help:
+      en_US: Indicates the thinking level. Default is High.
+      zh_Hans: 思考层级。默认为 High。
+  - name: media_resolution
+    type: string
+    required: true
+    default: "Default"
+    options:
+      - Default
+      - Low
+      - Medium
+      - High
+    label:
+      en_US: Media resolution
+      zh_Hans: 媒体分辨率
+    help:
+      en_US: Controls multimodal visual processing quality. Higher resolution improves detail recognition but increases token usage.
+      zh_Hans: 控制多模态视觉处理质量。分辨率越高，细节识别能力越强，但会增加令牌用量。
+  - name: grounding
+    type: boolean
+    required: true
+    default: false
+    label:
+      en_US: Grounding
+      zh_Hans: 事实核查
+    help:
+      en_US: Grounding with Google Search
+      zh_Hans: Google 事实核查
+  - name: url_context
+    type: boolean
+    required: true
+    default: false
+    label:
+      en_US: URL context
+      zh_Hans: 链接详情
+    help:
+      en_US: Browse the url context
+      zh_Hans: 获取并分析该链接的详细信息，为回答提供参考依据。
+  - name: code_execution
+    type: boolean
+    required: true
+    default: false
+    label:
+      en_US: Code execution
+      zh_Hans: 代码执行
+    help:
+      en_US: Lets Gemini use code to solve complex tasks
+      zh_Hans: 让 Gemini 使用代码来解决复杂任务。
+  - name: max_output_tokens
+    type: float
+    required: true
+    default: 65536
+    min: 1
+    max: 65536
+    label:
+      en_US: Output length
+      zh_Hans: 输出长度
+    help:
+      en_US: The maximum number of tokens to generate in the response.
+      zh_Hans: 模型单次输出的最大 tokens 数。
+pricing:
+  input: '1.50'
+  output: '9.00'
+  unit: '0.000001'
+  currency: USD
