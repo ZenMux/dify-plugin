@@ -1,0 +1,12 @@
+model: openai/text-embedding-3-small
+label:
+  en_US: 'OpenAI: Text Embedding 3 Small'
+  zh_Hans: 'OpenAI: Text Embedding 3 Small'
+model_type: text-embedding
+model_properties:
+  context_size: 8191
+  max_chunks: 2048
+pricing:
+  input: '0.02'
+  unit: '0.000001'
+  currency: USD
