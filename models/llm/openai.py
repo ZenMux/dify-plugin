@@ -1,38 +1,24 @@
+import json
 import logging
 from collections.abc import Generator
 from typing import Optional, Union
 
 from dify_plugin import OAICompatLargeLanguageModel
-from dify_plugin.entities import I18nObject
-from dify_plugin.errors.model import (
-    CredentialsValidateFailedError,
-)
-from dify_plugin.entities.model import (
-    AIModelEntity,
-    ModelFeature,
-    ModelType,
-)
-from dify_plugin.entities.model.llm import (
-    LLMResult,
-)
+from dify_plugin.entities.model import ModelFeature
+from dify_plugin.entities.model.llm import LLMResult
 from dify_plugin.entities.model.message import (
-    PromptMessage,
-    PromptMessageTool,
-    UserPromptMessage,
-    TextPromptMessageContent,
     ImagePromptMessageContent,
+    PromptMessage,
     PromptMessageContentType,
-    AssistantPromptMessage,
-    PromptMessageContent,
+    PromptMessageTool,
+    TextPromptMessageContent,
+    UserPromptMessage,
 )
 
 logger = logging.getLogger(__name__)
 
 
 class ZenMuxOpenAICCLargeLanguageModel(OAICompatLargeLanguageModel):
-    """
-    Model class for zenmux large language model based on OpenAI Chat Completions compatible api.
-    """
 
     def _update_credential(self, model: str, credentials: dict):
         credentials["endpoint_url"] = "https://zenmux.ai/api/v1"
@@ -42,112 +28,79 @@ class ZenMuxOpenAICCLargeLanguageModel(OAICompatLargeLanguageModel):
             schema.features or []
         ):
             credentials["function_calling_type"] = "tool_call"
-
-        # Add OpenRouter specific headers for rankings on openrouter.ai
         credentials["extra_headers"] = {"HTTP-Referer": "https://dify.ai/", "X-Title": "Dify"}
 
-    def _convert_files_to_text(self, messages: list[PromptMessage]) -> list[PromptMessage]:
-        """
-        Convert any file content in messages to text descriptions to avoid validation issues
-        """
-        converted_messages = []
-
-        for message in messages:
-            if isinstance(message, UserPromptMessage) and isinstance(message.content, list):
-                # Process multimodal content
-                text_parts = []
-                for content in message.content:
-                    if isinstance(content, TextPromptMessageContent):
-                        text_parts.append(content.data)
-                    elif isinstance(content, ImagePromptMessageContent):
-                        # Convert image to text description
-                        if hasattr(content, "url") and content.url:
-                            text_parts.append(f"[Image file uploaded]: {content.url}")
-                        else:
-                            text_parts.append("[Image file uploaded]")
-                    elif (
-                        hasattr(content, "type")
-                        and content.type == PromptMessageContentType.DOCUMENT
-                    ):
-                        # Handle any other content types
-                        if hasattr(content, "url"):
-                            text_parts.append(f"[File uploaded]: {content.url}")
-                        else:
-                            text_parts.append(str(content))
-
-                # Create new text-only message
-                converted_message = UserPromptMessage(content=" ".join(text_parts))
-                converted_messages.append(converted_message)
-            else:
-                # Keep non-multimodal messages as is
-                converted_messages.append(message)
-
-        return converted_messages
+    @staticmethod
+    def _convert_files_to_text(messages: list[PromptMessage]) -> list[PromptMessage]:
+        result = []
+        for msg in messages:
+            if not (isinstance(msg, UserPromptMessage) and isinstance(msg.content, list)):
+                result.append(msg)
+                continue
+            parts = []
+            for c in msg.content:
+                if isinstance(c, TextPromptMessageContent):
+                    parts.append(c.data)
+                elif isinstance(c, ImagePromptMessageContent):
+                    parts.append(f"[Image: {c.url}]" if c.url else "[Image]")
+                elif c.type == PromptMessageContentType.DOCUMENT:
+                    parts.append(f"[File: {getattr(c, 'url', '')}]")
+            result.append(UserPromptMessage(content=" ".join(parts)))
+        return result
 
     @staticmethod
     def _set_reasoning_params(model_parameters: dict):
-        reasoning_params = {}
+        reasoning = {}
+        enable = model_parameters.pop("enable_thinking", None)
+        if isinstance(enable, bool):
+            reasoning["enabled"] = enable
+        elif isinstance(enable, str):
+            reasoning["enabled"] = True
 
-        reasoning_budget = model_parameters.pop("reasnonig_budget", None)
-        enable_thinking = model_parameters.pop("enable_thinking", None)
-        reasoning_effort = model_parameters.pop("reasoning_effort", None)
-        exclude_reasoning_tokens = model_parameters.pop("exclude_reasoning_tokens", None)
+        budget = model_parameters.pop("reasoning_budget", None)
+        if isinstance(budget, int):
+            reasoning["max_tokens"] = budget
 
-        if isinstance(enable_thinking, bool):
-            reasoning_params["enabled"] = enable_thinking
-        elif isinstance(enable_thinking, str):
-            reasoning_params["enabled"] = True
+        effort = model_parameters.pop("reasoning_effort", None)
+        if effort in ("high", "medium", "low", "minimal", "none"):
+            reasoning["effort"] = effort
 
-        if isinstance(exclude_reasoning_tokens, bool):
-            reasoning_params["exclude"] = exclude_reasoning_tokens
+        exclude = model_parameters.pop("exclude_reasoning_tokens", None)
+        if isinstance(exclude, bool):
+            reasoning["exclude"] = exclude
 
-        if isinstance(reasoning_budget, int):
-            reasoning_params["max_tokens"] = reasoning_budget
-
-        if reasoning_effort in ["high", "medium", "low", "minimal", "none"]:
-            reasoning_params["effort"] = reasoning_effort
-
-        if reasoning_params:
-            model_parameters["reasoning"] = reasoning_params
+        if reasoning:
+            model_parameters["reasoning"] = reasoning
 
     @staticmethod
     def _set_json_schema_params(model_parameters: dict):
-        response_format = model_parameters.get("response_format")
-        if response_format and response_format == "json_schema":
-            json_schema_str = model_parameters.get("json_schema")
-            if json_schema_str:
-                json_schema = json.loads(json_schema_str)
-                schema = json_schema.get("schema") if "schema" in json_schema else json_schema
-                model_parameters["json_schema"] = json.dumps({"name": "output", "schema": schema})
+        if model_parameters.get("response_format") != "json_schema":
+            return
+        raw = model_parameters.get("json_schema")
+        if not raw:
+            return
+        parsed = json.loads(raw) if isinstance(raw, str) else raw
+        model_parameters["json_schema"] = json.dumps({
+            "name": "output", "schema": parsed.get("schema", parsed),
+        })
 
     def _invoke(
-        self,
-        model: str,
-        credentials: dict,
-        prompt_messages: list[PromptMessage],
-        model_parameters: dict,
-        tools: Optional[list[PromptMessageTool]] = None,
-        stop: Optional[list[str]] = None,
-        stream: bool = True,
-        user: Optional[str] = None,
+        self, model, credentials, prompt_messages, model_parameters,
+        tools=None, stop=None, stream=True, user=None,
     ) -> Union[LLMResult, Generator]:
         self._update_credential(model, credentials)
 
-        # Only convert file content to text descriptions for models that don't support vision
-        model_schema = self.get_model_schema(model, credentials)
-        if not (model_schema and ModelFeature.VISION in (model_schema.features or [])):
+        schema = self.get_model_schema(model, credentials)
+        if not (schema and ModelFeature.VISION in (schema.features or [])):
             prompt_messages = self._convert_files_to_text(prompt_messages)
 
         self._set_reasoning_params(model_parameters)
         self._set_json_schema_params(model_parameters)
 
         if stream:
-            stream_options = model_parameters.setdefault("stream_options", {})
-            stream_options["include_usage"] = True
+            model_parameters.setdefault("stream_options", {})["include_usage"] = True
 
-        return self._generate(
-            model, credentials, prompt_messages, model_parameters, tools, stop, stream, user
-        )
+        return self._generate(model, credentials, prompt_messages, model_parameters, tools, stop, stream, user)
 
     def get_num_tokens(
         self,
@@ -167,8 +120,3 @@ class ZenMuxOpenAICCLargeLanguageModel(OAICompatLargeLanguageModel):
         if "reasoning" in delta and "reasoning_content" not in delta:
             delta["reasoning_content"] = delta.pop("reasoning")
         return super()._wrap_thinking_by_reasoning_content(delta, is_reasoning)
-
-    def get_customizable_model_schema(
-        self, model: str, credentials: dict
-    ) -> AIModelEntity:
-        return super().get_customizable_model_schema(model, credentials)
