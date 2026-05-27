@@ -120,4 +120,3 @@ class ZenMuxOpenAICCLargeLanguageModel(OAICompatLargeLanguageModel):
         if "reasoning" in delta and "reasoning_content" not in delta:
             delta["reasoning_content"] = delta.pop("reasoning")
         return super()._wrap_thinking_by_reasoning_content(delta, is_reasoning)
-
