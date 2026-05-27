@@ -5,6 +5,7 @@ label:
 model_type: llm
 features:
   - agent-thought
+  - vision
   - tool-call
   - multi-tool-call
   - stream-tool-call
@@ -21,9 +22,9 @@ parameter_rules:
     use_template: top_p
   - name: max_tokens
     use_template: max_tokens
-    default: 1024
+    default: 4096
     min: 1
-    max: 200000
+    max: 64000
   - name: response_format
     label:
       zh_Hans: 回复格式
@@ -37,7 +38,7 @@ parameter_rules:
       - text
       - json_object
 pricing:
-  input: '1'
-  output: '5'
-  unit: '0.001'
+  input: '1.00'
+  output: '5.00'
+  unit: '0.000001'
   currency: USD

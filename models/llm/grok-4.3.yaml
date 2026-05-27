@@ -1,0 +1,42 @@
+model: x-ai/grok-4.3
+label:
+  en_US: 'X.AI: Grok 4.3'
+  zh_Hans: 'X.AI: Grok 4.3'
+model_type: llm
+features:
+- tool-call
+- multi-tool-call
+- agent-thought
+- stream-tool-call
+- vision
+model_properties:
+  mode: chat
+  context_size: 1000000
+parameter_rules:
+- name: temperature
+  use_template: temperature
+- name: top_p
+  use_template: top_p
+- name: max_tokens
+  use_template: max_tokens
+  required: true
+  default: 4096
+  min: 1
+  max: 1000000
+- name: response_format
+  label:
+    zh_Hans: 回复格式
+    en_US: Response Format
+  type: string
+  help:
+    zh_Hans: 指定模型必须输出的格式
+    en_US: specifying the format that the model must output
+  required: false
+  options:
+  - text
+  - json_object
+pricing:
+  input: '1.25'
+  output: '2.5'
+  unit: '0.000001'
+  currency: USD

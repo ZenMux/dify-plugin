@@ -51,7 +51,7 @@ parameter_rules:
     required: true
     default: 2000
     min: 1024
-    max: 64000
+    max: 60000
     label:
       en_US: Thinking Budget
       zh_Hans: 推理预算
