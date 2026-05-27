@@ -3,6 +3,7 @@ label:
   en_US: "OpenAI: GPT-4o mini"
 model_type: llm
 features:
+  - tool-call
   - multi-tool-call
   - agent-thought
   - stream-tool-call

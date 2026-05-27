@@ -1,0 +1,61 @@
+model: tencent/hy3-preview
+label:
+  en_US: 'Tencent: HY3 Preview'
+  zh_Hans: 'Tencent: HY3 Preview'
+model_type: llm
+features:
+- tool-call
+- multi-tool-call
+- agent-thought
+- stream-tool-call
+model_properties:
+  mode: chat
+  context_size: 262144
+parameter_rules:
+- name: temperature
+  use_template: temperature
+- name: top_p
+  use_template: top_p
+- name: max_tokens
+  use_template: max_tokens
+  required: true
+  default: 4096
+  min: 1
+  max: 262144
+- name: response_format
+  label:
+    zh_Hans: 回复格式
+    en_US: Response Format
+  type: string
+  help:
+    zh_Hans: 指定模型必须输出的格式
+    en_US: specifying the format that the model must output
+  required: false
+  options:
+  - text
+  - json_object
+- name: enable_thinking
+  type: boolean
+  required: true
+  default: false
+  label:
+    zh_Hans: 推理模式
+    en_US: Thinking Mode
+  help:
+    zh_Hans: 是否启用思考模式。启用时模型会进行深度推理，默认关闭。
+    en_US: Whether to enable thinking mode. When enabled, the model performs deeper reasoning. Default is off.
+- name: exclude_reasoning_tokens
+  label:
+    zh_Hans: 隐藏思考过程
+    en_US: Hide the thought process
+  type: boolean
+  default: true
+  help:
+    zh_Hans: 是否隐藏思考过程。
+    en_US: Whether to hide the thought process.
+  required: true
+pricing:
+  input: '0.172'
+  output: '0.572'
+  unit: '0.000001'
+  currency: USD
