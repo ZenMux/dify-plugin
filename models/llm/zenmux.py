@@ -16,7 +16,9 @@ class ZenMuxLargeLanguageModel(LargeLanguageModel):
 
         model_class_map = {}
         for model_schema in model_schemas:
-            model_class = MODEL_CLASS_MAP[model_schema.model]
+            model_class = MODEL_CLASS_MAP.get(model_schema.model)
+            if model_class is None:
+                continue
             if model_class not in model_class_map:
                 model_schema_list = model_class_map.setdefault(model_class, [])
             else:
