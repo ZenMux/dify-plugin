@@ -19,6 +19,7 @@ help:
     en_US: "https://zenmux.ai/settings/keys"
 supported_model_types:
   - llm
+  - text-embedding
 configurate_methods:
   - predefined-model
   - customizable-model
@@ -116,8 +117,13 @@ models:
     position: models/llm/_position.yaml
     predefined:
       - "models/llm/*.yaml"
+  text_embedding:
+    position: models/text_embedding/_position.yaml
+    predefined:
+      - "models/text_embedding/*.yaml"
 extra:
   python:
     provider_source: provider/zenmux.py
     model_sources:
       - "models/llm/llm.py"
+      - "models/text_embedding/text_embedding.py"

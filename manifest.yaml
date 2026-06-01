@@ -17,7 +17,7 @@ resource:
     model:
       enabled: true
       llm: true
-      text_embedding: false
+      text_embedding: true
       rerank: false
       tts: false
       speech2text: false
