@@ -1,4 +1,5 @@
 # Anthropic
+- anthropic/claude-opus-4.8
 - anthropic/claude-opus-4.7
 - anthropic/claude-opus-4.6
 - anthropic/claude-sonnet-4.6
@@ -75,6 +76,7 @@
 - z-ai/glm-4.5
 - z-ai/glm-4.5-air
 # Qwen
+- qwen/qwen3.7-plus
 - qwen/qwen3.7-max
 - qwen/qwen3.6-max-preview
 - qwen/qwen3.6-plus
@@ -89,6 +91,7 @@
 - qwen/qwen3-235b-a22b-2507
 - qwen/qwen3-14b
 # MiniMax
+- minimax/minimax-m3
 - minimax/minimax-m2.7-highspeed
 - minimax/minimax-m2.7
 - minimax/minimax-m2.5-lightning
@@ -119,6 +122,7 @@
 - baidu/ernie-x1.1-preview
 - baidu/ernie-5.0-thinking-preview
 # StepFun
+- stepfun/step-3.7-flash
 - stepfun/step-3.5-flash
 - stepfun/step-3
 # InclusionAI
@@ -130,13 +134,9 @@
 - inclusionai/llada2.1-flash
 # Sapiens AI
 - sapiens-ai/agnes-2.0-flash
-- sapiens-ai/agnes-1.5-flash
-- sapiens-ai/agnes-1.5-pro
 # Kuaishou
 - kuaishou/kat-coder-pro-v2
 # Xiaomi
 - xiaomi/mimo-v2.5-pro
 - xiaomi/mimo-v2.5
-- xiaomi/mimo-v2-pro
-- xiaomi/mimo-v2-omni
 - xiaomi/mimo-v2-flash

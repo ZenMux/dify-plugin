@@ -1,9 +1,11 @@
-model: sapiens-ai/agnes-1.5-pro
+model: stepfun/step-3.7-flash
 label:
-  en_US: 'Sapiens AI: Agnes 1.5 Pro'
-  zh_Hans: 'Sapiens AI: Agnes 1.5 Pro'
+  en_US: 'StepFun: Step 3.7 Flash'
+  zh_Hans: 'StepFun: Step 3.7 Flash'
 model_type: llm
 features:
+- vision
+- video
 - tool-call
 - multi-tool-call
 - agent-thought
@@ -55,7 +57,7 @@ parameter_rules:
     en_US: Whether to hide the thought process.
   required: true
 pricing:
-  input: '0.16'
-  output: '0.8'
+  input: '0.2'
+  output: '1.15'
   unit: '0.000001'
   currency: USD
