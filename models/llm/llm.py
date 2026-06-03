@@ -10,6 +10,7 @@ def _register_models():
 
     MODEL_CLASS_MAP.update({
         # Anthropic
+        'anthropic/claude-opus-4.8': ZenMuxAnthropicLargeLanguageModel,
         'anthropic/claude-opus-4.7': ZenMuxAnthropicLargeLanguageModel,
         'anthropic/claude-opus-4.6': ZenMuxAnthropicLargeLanguageModel,
         'anthropic/claude-sonnet-4.6': ZenMuxAnthropicLargeLanguageModel,
@@ -87,6 +88,7 @@ def _register_models():
         'z-ai/glm-4.5-air': ZenMuxOpenAICCLargeLanguageModel,
 
         # Qwen
+        'qwen/qwen3.7-plus': ZenMuxOpenAICCLargeLanguageModel,
         'qwen/qwen3.7-max': ZenMuxOpenAICCLargeLanguageModel,
         'qwen/qwen3.6-max-preview': ZenMuxOpenAICCLargeLanguageModel,
         'qwen/qwen3.6-plus': ZenMuxOpenAICCLargeLanguageModel,
@@ -121,8 +123,6 @@ def _register_models():
         # Xiaomi
         'xiaomi/mimo-v2.5-pro': ZenMuxOpenAICCLargeLanguageModel,
         'xiaomi/mimo-v2.5': ZenMuxOpenAICCLargeLanguageModel,
-        'xiaomi/mimo-v2-pro': ZenMuxOpenAICCLargeLanguageModel,
-        'xiaomi/mimo-v2-omni': ZenMuxOpenAICCLargeLanguageModel,
         'xiaomi/mimo-v2-flash': ZenMuxOpenAICCLargeLanguageModel,
 
         # X.AI
@@ -131,6 +131,7 @@ def _register_models():
         'x-ai/grok-4.2-fast-non-reasoning': ZenMuxOpenAICCLargeLanguageModel,
 
         # MiniMax
+        'minimax/minimax-m3': ZenMuxOpenAICCLargeLanguageModel,
         'minimax/minimax-m2.7-highspeed': ZenMuxOpenAICCLargeLanguageModel,
         'minimax/minimax-m2.7': ZenMuxOpenAICCLargeLanguageModel,
         'minimax/minimax-m2.5-lightning': ZenMuxOpenAICCLargeLanguageModel,
@@ -159,13 +160,12 @@ def _register_models():
         'tencent/hunyuan-2.0-thinking': ZenMuxOpenAICCLargeLanguageModel,
 
         # StepFun
+        'stepfun/step-3.7-flash': ZenMuxOpenAICCLargeLanguageModel,
         'stepfun/step-3.5-flash': ZenMuxOpenAICCLargeLanguageModel,
         'stepfun/step-3': ZenMuxOpenAICCLargeLanguageModel,
 
         # Sapiens AI
         'sapiens-ai/agnes-2.0-flash': ZenMuxOpenAICCLargeLanguageModel,
-        'sapiens-ai/agnes-1.5-flash': ZenMuxOpenAICCLargeLanguageModel,
-        'sapiens-ai/agnes-1.5-pro': ZenMuxOpenAICCLargeLanguageModel,
 
         # Kuaishou
         'kuaishou/kat-coder-pro-v2': ZenMuxOpenAICCLargeLanguageModel,

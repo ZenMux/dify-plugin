@@ -41,43 +41,6 @@ parameter_rules:
       - json_schema
   - name: json_schema
     use_template: json_schema
-  - name: reasoning_effort
-    label:
-      zh_Hans: 推理程度
-      en_US: Reasoning Effort
-    type: string
-    help:
-      zh_Hans: 指定模型推理的难度
-      en_US: specifying the difficulty of the model's reasoning
-    required: false
-    options:
-      - high
-      - medium
-      - low
-      - minimal
-  - name: verbosity
-    label:
-      zh_Hans: 回复详细度
-      en_US: Verbosity
-    required: false
-    type: string
-    help:
-      zh_Hans: "控制模型响应的详细程度和长度。"
-      en_US: "Controls the verbosity and length of the model response."
-    options:
-      - low
-      - medium
-      - high
-  - name: exclude_reasoning_tokens
-    label:
-      zh_Hans: 隐藏思考过程
-      en_US: Hide the thought process
-    type: boolean
-    default: false
-    help:
-      zh_Hans: 是否隐藏思考过程。
-      en_US: Whether to hide the thought process.
-    required: false
 pricing:
   input: '1.25'
   output: '10.00'

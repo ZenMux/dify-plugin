@@ -37,6 +37,38 @@ parameter_rules:
     options:
       - text
       - json_object
+  - name: enable_thinking
+    type: boolean
+    required: true
+    default: false
+    label:
+      zh_Hans: 推理模式
+      en_US: Thinking Mode
+    help:
+      zh_Hans: 控制模型的推理能力。启用时，temperature、top_p 和 top_k 将被禁用。
+      en_US: Controls the model's thinking capability. When enabled, temperature, top_p and top_k will be disabled.
+  - name: reasoning_budget
+    type: int
+    required: true
+    default: 2000
+    min: 1024
+    max: 60000
+    label:
+      en_US: Reasoning budget
+      zh_Hans: 思考预算
+    help:
+      en_US: Reasoning budget, in tokens
+      zh_Hans: 思考预算，单位为 token
+  - name: exclude_reasoning_tokens
+    type: boolean
+    required: true
+    default: true
+    label:
+      zh_Hans: 隐藏思考过程
+      en_US: Hide the thought process
+    help:
+      zh_Hans: 是否隐藏思考过程。
+      en_US: Whether to hide the thought process.
 pricing:
   input: '1.00'
   output: '5.00'
