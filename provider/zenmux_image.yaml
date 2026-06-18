@@ -1,0 +1,35 @@
+identity:
+  author: zenmux
+  name: zenmux_image
+  label:
+    en_US: ZenMux Image
+    zh_Hans: ZenMux 图像
+    ja_JP: ZenMux 画像
+  description:
+    en_US: Generate and edit images with ZenMux image models (Nano Banana Pro, GPT Image, Qwen Image).
+    zh_Hans: 使用 ZenMux 图像模型（Nano Banana Pro、GPT Image、Qwen Image）生成与编辑图像。
+    ja_JP: ZenMux の画像モデル（Nano Banana Pro、GPT Image、Qwen Image）で画像を生成・編集します。
+  icon: icon.svg
+  icon_dark: icon-dark.svg
+  tags:
+    - image
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: API Key
+      zh_Hans: API Key
+    placeholder:
+      en_US: Enter your ZenMux API Key
+      zh_Hans: 在此输入您的 ZenMux API Key
+    help:
+      en_US: Get your API Key from zenmux.ai. The image tools use a separate credential from the ZenMux model provider.
+      zh_Hans: 从 ZenMux 获取 API Key。图像工具与 ZenMux 模型供应商使用相互独立的凭据，需单独配置一次。
+    url: https://zenmux.ai/settings/keys
+tools:
+  - tools/text2image.yaml
+  - tools/image_edit.yaml
+extra:
+  python:
+    source: provider/zenmux_image.py
