@@ -22,9 +22,13 @@ resource:
       tts: false
       speech2text: false
       moderation: false
+    tool:
+      enabled: true
 plugins:
   models:
     - provider/zenmux.yaml
+  tools:
+    - provider/zenmux_image.yaml
 meta:
   version: 0.0.1
   arch:

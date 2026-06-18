@@ -1,0 +1,143 @@
+identity:
+  author: zenmux
+  name: image_edit
+  label:
+    en_US: Image Edit
+    zh_Hans: 图像编辑
+    ja_JP: 画像編集
+description:
+  human:
+    en_US: Edit or transform existing images with a text prompt using ZenMux image models (image-to-image, optional mask).
+    zh_Hans: 使用 ZenMux 图像模型，根据文本提示词编辑或改写已有图像（图生图，支持可选遮罩）。
+    ja_JP: ZenMux の画像モデルで、既存の画像をテキストプロンプトに従って編集します。
+  llm: Edit, restyle, or transform one or more input images according to a prompt. Use when the user uploads an image and asks to modify it, change its style, replace the background, or inpaint a region (with an optional mask).
+parameters:
+  - name: prompt
+    type: string
+    required: true
+    label:
+      en_US: Prompt
+      zh_Hans: 提示词
+    human_description:
+      en_US: Description of the edit to apply to the input image.
+      zh_Hans: 对输入图像要进行的编辑描述。
+    llm_description: A natural-language description of how the input image should be edited or transformed.
+    form: llm
+  - name: image
+    type: files
+    required: true
+    label:
+      en_US: Image
+      zh_Hans: 图像
+    human_description:
+      en_US: The input image(s) to edit.
+      zh_Hans: 要编辑的输入图像。
+    llm_description: The reference image(s) to edit or transform.
+    form: llm
+  - name: mask
+    type: file
+    required: false
+    label:
+      en_US: Mask
+      zh_Hans: 遮罩
+    human_description:
+      en_US: Optional mask image; transparent areas define the editable region (OpenAI / Qwen models).
+      zh_Hans: 可选的遮罩图像；透明区域为可编辑区域（OpenAI / Qwen 模型）。
+    form: llm
+  - name: model
+    type: select
+    required: true
+    default: google/gemini-3-pro-image-preview
+    label:
+      en_US: Model
+      zh_Hans: 模型
+    human_description:
+      en_US: The image model to use.
+      zh_Hans: 使用的图像模型。
+    options:
+      - value: google/gemini-3-pro-image-preview
+        label:
+          en_US: Nano Banana Pro (google/gemini-3-pro-image-preview)
+      - value: openai/gpt-image-2
+        label:
+          en_US: openai/gpt-image-2
+      - value: openai/gpt-image-1.5
+        label:
+          en_US: openai/gpt-image-1.5
+      - value: qwen/qwen-image-2.0
+        label:
+          en_US: qwen/qwen-image-2.0
+    form: form
+  - name: n
+    type: number
+    required: false
+    default: 1
+    min: 1
+    max: 10
+    label:
+      en_US: Number of images
+      zh_Hans: 生成数量
+    human_description:
+      en_US: Number of images to generate (OpenAI / Qwen models only).
+      zh_Hans: 生成的图像数量（仅 OpenAI / Qwen 模型支持）。
+    form: form
+  - name: size
+    type: string
+    required: false
+    label:
+      en_US: Size
+      zh_Hans: 尺寸
+    human_description:
+      en_US: 'Pixel size for OpenAI / Qwen models, e.g. 1024x1024, 1536x1024, 1024x1536, or auto.'
+      zh_Hans: 'OpenAI / Qwen 模型的像素尺寸，例如 1024x1024、1536x1024、1024x1536 或 auto。'
+    form: form
+  - name: quality
+    type: select
+    required: false
+    label:
+      en_US: Quality
+      zh_Hans: 质量
+    human_description:
+      en_US: Image quality for OpenAI / Qwen models.
+      zh_Hans: OpenAI / Qwen 模型的图像质量。
+    options:
+      - value: auto
+        label:
+          en_US: Auto
+          zh_Hans: 自动
+      - value: low
+        label:
+          en_US: Low
+          zh_Hans: 低
+      - value: medium
+        label:
+          en_US: Medium
+          zh_Hans: 中
+      - value: high
+        label:
+          en_US: High
+          zh_Hans: 高
+    form: form
+  - name: output_format
+    type: select
+    required: false
+    label:
+      en_US: Output format
+      zh_Hans: 输出格式
+    human_description:
+      en_US: Output image format.
+      zh_Hans: 输出图像格式。
+    options:
+      - value: png
+        label:
+          en_US: PNG
+      - value: jpeg
+        label:
+          en_US: JPEG
+      - value: webp
+        label:
+          en_US: WebP
+    form: form
+extra:
+  python:
+    source: tools/image_edit.py

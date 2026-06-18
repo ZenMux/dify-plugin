@@ -1,0 +1,163 @@
+identity:
+  author: zenmux
+  name: text2image
+  label:
+    en_US: Text to Image
+    zh_Hans: 文生图
+    ja_JP: テキストから画像
+description:
+  human:
+    en_US: Generate images from a text prompt using ZenMux image models (Nano Banana Pro, GPT Image, Qwen Image).
+    zh_Hans: 使用 ZenMux 图像模型（Nano Banana Pro、GPT Image、Qwen Image）根据文本提示词生成图像。
+    ja_JP: ZenMux の画像モデルでテキストプロンプトから画像を生成します。
+  llm: Generate one or more images from a natural-language description. Useful when the user asks to draw, create, or illustrate a picture from text.
+parameters:
+  - name: prompt
+    type: string
+    required: true
+    label:
+      en_US: Prompt
+      zh_Hans: 提示词
+    human_description:
+      en_US: Text description of the image you want to generate.
+      zh_Hans: 想要生成的图像的文本描述。
+    llm_description: A detailed natural-language description of the image to generate.
+    form: llm
+  - name: model
+    type: select
+    required: true
+    default: google/gemini-3-pro-image-preview
+    label:
+      en_US: Model
+      zh_Hans: 模型
+    human_description:
+      en_US: The image generation model to use.
+      zh_Hans: 使用的图像生成模型。
+    options:
+      - value: google/gemini-3-pro-image-preview
+        label:
+          en_US: Nano Banana Pro (google/gemini-3-pro-image-preview)
+      - value: openai/gpt-image-2
+        label:
+          en_US: openai/gpt-image-2
+      - value: openai/gpt-image-1.5
+        label:
+          en_US: openai/gpt-image-1.5
+      - value: qwen/qwen-image-2.0
+        label:
+          en_US: qwen/qwen-image-2.0
+    form: form
+  - name: n
+    type: number
+    required: false
+    default: 1
+    min: 1
+    max: 10
+    label:
+      en_US: Number of images
+      zh_Hans: 生成数量
+    human_description:
+      en_US: Number of images to generate (OpenAI / Qwen models only).
+      zh_Hans: 生成的图像数量（仅 OpenAI / Qwen 模型支持）。
+    form: form
+  - name: size
+    type: string
+    required: false
+    label:
+      en_US: Size
+      zh_Hans: 尺寸
+    human_description:
+      en_US: 'Pixel size for OpenAI / Qwen models, e.g. 1024x1024, 1536x1024, 1024x1536, or auto.'
+      zh_Hans: 'OpenAI / Qwen 模型的像素尺寸，例如 1024x1024、1536x1024、1024x1536 或 auto。'
+    form: form
+  - name: aspect_ratio
+    type: select
+    required: false
+    label:
+      en_US: Aspect ratio
+      zh_Hans: 宽高比
+    human_description:
+      en_US: Aspect ratio for Google (Gemini) image models.
+      zh_Hans: Google（Gemini）图像模型的宽高比。
+    options:
+      - value: "1:1"
+        label:
+          en_US: "1:1"
+      - value: "2:3"
+        label:
+          en_US: "2:3"
+      - value: "3:2"
+        label:
+          en_US: "3:2"
+      - value: "3:4"
+        label:
+          en_US: "3:4"
+      - value: "4:3"
+        label:
+          en_US: "4:3"
+      - value: "4:5"
+        label:
+          en_US: "4:5"
+      - value: "5:4"
+        label:
+          en_US: "5:4"
+      - value: "9:16"
+        label:
+          en_US: "9:16"
+      - value: "16:9"
+        label:
+          en_US: "16:9"
+      - value: "21:9"
+        label:
+          en_US: "21:9"
+    form: form
+  - name: quality
+    type: select
+    required: false
+    label:
+      en_US: Quality
+      zh_Hans: 质量
+    human_description:
+      en_US: Image quality for OpenAI / Qwen models.
+      zh_Hans: OpenAI / Qwen 模型的图像质量。
+    options:
+      - value: auto
+        label:
+          en_US: Auto
+          zh_Hans: 自动
+      - value: low
+        label:
+          en_US: Low
+          zh_Hans: 低
+      - value: medium
+        label:
+          en_US: Medium
+          zh_Hans: 中
+      - value: high
+        label:
+          en_US: High
+          zh_Hans: 高
+    form: form
+  - name: output_format
+    type: select
+    required: false
+    label:
+      en_US: Output format
+      zh_Hans: 输出格式
+    human_description:
+      en_US: Output image format.
+      zh_Hans: 输出图像格式。
+    options:
+      - value: png
+        label:
+          en_US: PNG
+      - value: jpeg
+        label:
+          en_US: JPEG
+      - value: webp
+        label:
+          en_US: WebP
+    form: form
+extra:
+  python:
+    source: tools/text2image.py
