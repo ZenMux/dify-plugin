@@ -1,0 +1,83 @@
+# Manual knowledge layered on top of the live ZenMux catalog (see scripts/zenmux_models.py).
+# Every entry should say why it exists and when it was verified, so the next sync can re-check it.
+
+exclude:
+  ids:
+    anthropic/claude-opus-4.1: "upstream returns 404 (publisher model not found), verified 2026-10-07"
+  # Free / zero-priced models are rate-limited, change often, and are not meant for production apps.
+  id_suffixes: ["-free"]
+  zero_priced: true
+
+# Display order in Dify; providers not listed go last. Within a provider: newest first.
+provider_order:
+  - anthropic
+  - google
+  - openai
+  - x-ai
+  - deepseek
+  - z-ai
+  - qwen
+  - minimax
+  - moonshotai
+  - meta
+  - mistralai
+  - bytedance
+  - tencent
+  - baidu
+  - stepfun
+  - xiaomi
+  - inclusionai
+  - meituan
+  - sapiens-ai
+  - sakana
+  - mindai
+
+# Models that are callable but whose catalog entry has no capabilities/pricing.
+# Prices are the per-1M-token rates billed by ZenMux (GET /api/v1/management/generation
+# ratingDetails), NOT the website list price, which was stale for some of them.
+manual:
+  deepseek/deepseek-v4-flash:      {price: {input: 0.22, output: 0.66}, reasoning: true,  verified: "2026-10-07"}
+  deepseek/deepseek-chat-v3.1:     {price: {input: 0.56, output: 1.68}, reasoning: false, verified: "2026-10-07"}
+  deepseek/deepseek-r1-0528:       {price: {input: 0.56, output: 2.23}, reasoning: true,  verified: "2026-10-07"}
+  inclusionai/ring-2.6-1t:         {price: {input: 0.3,  output: 2.5},  reasoning: true,  verified: "2026-10-07"}
+  inclusionai/ling-2.6-1t:         {price: {input: 0.3,  output: 2.5},  reasoning: false, verified: "2026-10-07"}
+  inclusionai/ling-2.6-flash:      {price: {input: 0.1,  output: 0.3},  reasoning: false, verified: "2026-10-07"}
+  google/gemma-4-31b-it:           {price: {input: 0.14, output: 0.4},  reasoning: false, verified: "2026-10-07"}
+  minimax/minimax-m2.5-lightning:  {price: {input: 0.6,  output: 2.4},  reasoning: true,  verified: "2026-10-07"}
+  openai/gpt-5-codex:              {price: {input: 1.25, output: 10},   reasoning: true,  verified: "2026-10-07"}
+  openai/gpt-5.1-codex:            {price: {input: 1.25, output: 10},   reasoning: true,  verified: "2026-10-07"}
+  openai/gpt-5.1-codex-mini:       {price: {input: 0.25, output: 2},    reasoning: true,  verified: "2026-10-07"}
+  openai/gpt-5.2-codex:            {price: {input: 1.75, output: 14},   reasoning: true,  verified: "2026-10-07"}
+
+# Per-model corrections. Keys: features_add, features_remove, params_remove, max_output, max_chunks, reasoning, params.
+models:
+  minimax/minimax-m3:
+    # ZenMux: file input only works on the Anthropic protocol; we route MiniMax via chat completions.
+    features_remove: [document]
+  google/gemini-2.5-pro:
+    # Thinking cannot be turned off: "does not support setting thinking_budget to 0" (400), verified 2026-10-07.
+    params_remove: [thinking_mode]
+  qwen/qwen3-vl-embedding:
+    # Batches over 20 inputs fail: "batch size ... should not be larger than 20" (400), verified 2026-10-07.
+    max_chunks: 20
+
+# Parameters/features a model shipped in the last release and no longer gets, reviewed by hand because no
+# catalog/probe evidence explains them (see scripts/zenmux_models.py::release_removals). Verified 2026-10-08.
+accepted_removals:
+  anthropic/claude-haiku-4.5:
+    # "`temperature` and `top_p` cannot both be specified for this model" (400); temperature is kept.
+    params: [top_p]
+  openai/gpt-4.1: {params: [top_k]}  # OpenAI has no top_k; ZenMux accepted it with no effect.
+  openai/gpt-4.1-mini: {params: [top_k]}
+  openai/gpt-4.1-nano: {params: [top_k]}
+  openai/gpt-4o: {params: [top_k]}
+  openai/gpt-4o-mini: {params: [top_k]}
+  openai/o4-mini: {params: [top_k]}
+  # logprobs come back empty (`content: []`) on these models and Dify never reads them.
+  openai/gpt-5: {params: [logprobs, top_logprobs]}
+  openai/gpt-5-mini: {params: [logprobs, top_logprobs]}
+  openai/gpt-5-nano: {params: [logprobs, top_logprobs]}
+  openai/gpt-5-pro: {params: [logprobs, top_logprobs]}
+  openai/gpt-5.1: {params: [logprobs, top_logprobs]}
+  openai/gpt-5.2: {params: [logprobs, top_logprobs]}
+  openai/gpt-5.2-pro: {params: [logprobs, top_logprobs]}

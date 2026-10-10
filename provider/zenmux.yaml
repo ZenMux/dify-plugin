@@ -20,6 +20,7 @@ help:
 supported_model_types:
   - llm
   - text-embedding
+  - rerank
 configurate_methods:
   - predefined-model
   - customizable-model
@@ -42,6 +43,22 @@ model_credential_schema:
       placeholder:
         zh_Hans: 在此输入您的 API Key
         en_US: Enter your API Key
+    - variable: region
+      label:
+        en_US: Region
+        zh_Hans: 接入区域
+      type: select
+      required: false
+      default: global
+      options:
+        - value: global
+          label:
+            en_US: Global (zenmux.ai)
+            zh_Hans: 全球 (zenmux.ai)
+        - value: cn
+          label:
+            en_US: Mainland China (zenmux.dev)
+            zh_Hans: 中国内地 (zenmux.dev)
     - variable: context_size
       label:
         en_US: Model context size
@@ -112,6 +129,22 @@ provider_credential_schema:
       placeholder:
         zh_Hans: 在此输入您的 API Key
         en_US: Enter your API Key
+    - variable: region
+      label:
+        en_US: Region
+        zh_Hans: 接入区域
+      type: select
+      required: false
+      default: global
+      options:
+        - value: global
+          label:
+            en_US: Global (zenmux.ai)
+            zh_Hans: 全球 (zenmux.ai)
+        - value: cn
+          label:
+            en_US: Mainland China (zenmux.dev)
+            zh_Hans: 中国内地 (zenmux.dev)
 models:
   llm:
     position: models/llm/_position.yaml
@@ -121,9 +154,14 @@ models:
     position: models/text_embedding/_position.yaml
     predefined:
       - "models/text_embedding/*.yaml"
+  rerank:
+    position: models/rerank/_position.yaml
+    predefined:
+      - "models/rerank/*.yaml"
 extra:
   python:
     provider_source: provider/zenmux.py
     model_sources:
       - "models/llm/llm.py"
       - "models/text_embedding/text_embedding.py"
+      - "models/rerank/rerank.py"

@@ -9,7 +9,6 @@ from collections.abc import Generator, Iterator, Sequence
 from contextlib import suppress
 from typing import Optional, Union, Mapping, Any, Tuple, List, TypeVar
 
-import requests
 from dify_plugin.entities.model.llm import LLMResult, LLMResultChunk, LLMResultChunkDelta
 from dify_plugin.entities.model.message import (
     AssistantPromptMessage,
@@ -36,6 +35,8 @@ from dify_plugin.errors.model import (
 from dify_plugin.interfaces.model.large_language_model import LargeLanguageModel
 from google import genai
 from google.genai import errors, types
+
+from models._common import file_base64, keep_supported_files, vertex_base_url
 
 from .utils import FileCache, UNSUPPORTED_DOCUMENT_TYPES, UNSUPPORTED_EXTENSIONS
 
@@ -132,17 +133,12 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
                 file_content = base64.b64decode(message_content.base64_data)
                 temp_file.write(file_content)
             else:
-                try:
-                    file_url = message_content.url
-                    if file_server_url_prefix:
-                        file_url = f"{file_server_url_prefix.rstrip('/')}/files{message_content.url.split('/files')[-1]}"
-                    if not file_url.startswith("https://") and not file_url.startswith("http://"):
-                        raise ValueError("Set FILES_URL env first!")
-                    response: requests.Response = requests.get(file_url)
-                    response.raise_for_status()
-                    temp_file.write(response.content)
-                except Exception as ex:
-                    raise ValueError(f"Failed to fetch data from url {file_url} {ex}")
+                file_url = message_content.url
+                if file_server_url_prefix:
+                    file_url = f"{file_server_url_prefix.rstrip('/')}/files{message_content.url.split('/files')[-1]}"
+                if not file_url.startswith("https://") and not file_url.startswith("http://"):
+                    raise ValueError("Set FILES_URL env first!")
+                temp_file.write(base64.b64decode(file_base64(message_content.model_copy(update={"url": file_url}))))
             temp_file.flush()
 
         pending_mime_type = message_content.mime_type
@@ -180,8 +176,8 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
         """
         Map model invoke error to unified error
         """
+        # Checked in order: ClientError/ServerError subclass APIError, so the generic entry goes last.
         return {
-            InvokeConnectionError: [errors.APIError, errors.ClientError],
             InvokeServerUnavailableError: [errors.ServerError],
             InvokeBadRequestError: [
                 errors.ClientError,
@@ -189,6 +185,7 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
                 errors.UnsupportedFunctionError,
                 errors.FunctionInvocationError,
             ],
+            InvokeConnectionError: [errors.APIError],
         }
 
     @staticmethod
@@ -868,6 +865,8 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
         :return: full response or stream response chunk generator result
         """
         _ = user
+        schema = self.get_model_schema(model, credentials)
+        prompt_messages = keep_supported_files(prompt_messages, schema.features if schema else None)
         return self._generate(
             model, credentials, prompt_messages, model_parameters, tools, stop, stream, user
         )
@@ -890,11 +889,7 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
         # == InitConfig == #
 
         config = types.GenerateContentConfig()
-        genai_client = genai.Client(
-            api_key=credentials["api_key"],
-            http_options=types.HttpOptions(api_version="v1", base_url="https://zenmux.ai/api/vertex-ai"),
-            vertexai=True
-        )
+        genai_client = self._client(credentials)
 
         # == ChatConfig == #
 
@@ -987,10 +982,16 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
         :return:
         """
         try:
-            genai_client = genai.Client(
-                api_key=credentials["google_api_key"],
-                http_options=types.HttpOptions(base_url=credentials.get("google_base_url", None)),
+            self._client(credentials).models.generate_content(
+                model=model, contents="ping", config=types.GenerateContentConfig(max_output_tokens=16)
             )
-            genai_client.models.count_tokens(model=model, contents="ping")
         except Exception as ex:
             raise CredentialsValidateFailedError(str(ex))
+
+    @staticmethod
+    def _client(credentials: dict) -> genai.Client:
+        return genai.Client(
+            api_key=credentials["api_key"],
+            http_options=types.HttpOptions(api_version="v1", base_url=vertex_base_url(credentials)),
+            vertexai=True,
+        )

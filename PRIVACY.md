@@ -4,12 +4,12 @@ This privacy policy explains how the ZenMux Dify Plugin collects, uses, and proc
 
 ## Data Collection
 
-This plugin collects and processes the folloing types of data:
+This plugin collects and processes the following types of data:
 
 ### Configuration Information
-- ZenMux Api Key Configuration
-  - Purpose: Used for authentication with the zenmux.ai to access models.
-  - Storage Location: Stored only in your Dify instance and will not be sent to any third-party services.
+- ZenMux Api Key and Region Configuration
+  - Purpose: Used for authentication with ZenMux to access models. The region selects the endpoint: zenmux.ai (Global) or zenmux.dev (Mainland China).
+  - Storage Location: Stored only in your Dify instance and only sent to the selected ZenMux endpoint.
 
 - Custom Model Configuration
   - Purpose: Used to access custom models provided by zenmux.ai.
@@ -24,10 +24,12 @@ The data collected by this plugin is used solely for the following purposes:
 ### Third-Party Services
 This plugin needs to interact with the following third-party services:
 
-- zenmux.ai
-  - Shared Data: Api key, User messages, AI response content
-  - Purpose: To access models provided by zenmux.ai
+- ZenMux (zenmux.ai or zenmux.dev, depending on the selected region)
+  - Shared Data: Api key, User messages and attached files (images, documents, audio, video), AI response content
+  - Purpose: To access models provided by ZenMux
   - Privacy Policy: [ZenMux Privacy Policy](https://docs.zenmux.ai/privacy.html)
+
+When a message references an image or file by URL, the plugin may download it in order to forward it to ZenMux.
 
 This plugin will not share your data with any third parties other than those listed above.
 
@@ -49,6 +51,6 @@ We may update this privacy policy from time to time. In the event of significant
 
 ## Contact Information
 
-If you have any questions about this privacy policy, please contact the plugin author.
+If you have any questions about this privacy policy, please contact support@zenmux.ai.
 
-Last Updated: December 2025
+Last Updated: October 2026

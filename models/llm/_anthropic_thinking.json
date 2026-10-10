@@ -1,0 +1,16 @@
+{
+ "anthropic/claude-fable-5": "always_on",
+ "anthropic/claude-fable-5.1": "always_on",
+ "anthropic/claude-haiku-4.5": "disabled",
+ "anthropic/claude-haiku-5.5": "disabled",
+ "anthropic/claude-opus-4.5": "disabled",
+ "anthropic/claude-opus-4.6": "disabled",
+ "anthropic/claude-opus-4.7": "disabled",
+ "anthropic/claude-opus-4.8": "disabled",
+ "anthropic/claude-opus-5": "disabled",
+ "anthropic/claude-opus-5.5": "always_on",
+ "anthropic/claude-sonnet-4.5": "disabled",
+ "anthropic/claude-sonnet-4.6": "disabled",
+ "anthropic/claude-sonnet-5": "disabled",
+ "anthropic/claude-sonnet-5.5": "between_tools"
+}
