@@ -5,7 +5,8 @@ Subcommands:
   fetch   Pull the official catalog (+ undocumented website metadata as enrichment)
           and write a normalized snapshot to catalog/snapshot.json.
   probe   Run cheap live requests that the catalog cannot answer (tool calling,
-          reasoning_effort values, Claude temperature/adaptive thinking, embedding
+          reasoning_effort values, what the thinking switch does when absent/off/on,
+          Claude temperature/adaptive thinking, embedding
           batching, whether embedding/rerank models really use images) and record
           results in catalog/probes.json. Needs ZENMUX_PROBE_API_KEY.
   sync    Generate models/**/*.yaml and _position.yaml from snapshot + probes +
@@ -152,6 +153,18 @@ def protocol_of(model_id: str) -> str:
     if model_id.startswith("google/gemini-"):
         return "google"
     return "openai"
+
+
+def reasoning_switch(model_id):
+    """The on/off parameter whose untouched behaviour would be the upstream default unless the plugin sends
+    the declared one (models/_common.py::with_declared_defaults).
+
+    Claude is not listed: the plugin always sends its off value (_anthropic_thinking.json).
+    """
+    proto = protocol_of(model_id)
+    if proto == "google":
+        return "thinking_mode" if model_id.startswith("google/gemini-2.") else None
+    return "enable_thinking" if proto == "openai" and not model_id.startswith("openai/") else None
 
 
 def resolve(m, overrides, probes):
@@ -360,6 +373,58 @@ def probe_thinking_off(mid, key):
     return "always_on"
 
 
+SWITCH_PROMPT = "What is 17*23? Reply with just the number."
+SWITCH_STATES = {"absent": None, "off": False, "on": True}
+
+
+def _thinks(mid, state, key):
+    """(status, whether the reply reasoned) for one switch state, sent the way the plugin sends it."""
+    if protocol_of(mid) == "google":
+        sys.path.insert(0, str(ROOT))
+        from google.genai import types
+        from models.llm.google import ZenMuxGoogleLargeLanguageModel
+        budget = {None: None, False: 0, True: -1}[state]
+        client = ZenMuxGoogleLargeLanguageModel._client({"api_key": key})  # closes itself when garbage-collected
+        try:
+            resp = client.models.generate_content(
+                model=mid, contents=SWITCH_PROMPT, config=types.GenerateContentConfig(
+                    max_output_tokens=2048, thinking_config=None if budget is None else types.ThinkingConfig(thinking_budget=budget)))
+            return 200, (resp.usage_metadata.thoughts_token_count or 0) > 0
+        except Exception as exc:
+            return getattr(exc, "code", 0) or 0, None
+    extra = {} if state is None else {"reasoning": {"enabled": state}}
+    status, body = _post("/api/v1/chat/completions", {"model": mid, "max_tokens": 2048,
+                                                      "messages": [{"role": "user", "content": SWITCH_PROMPT}], **extra}, key)
+    if status != 200:
+        return status, None
+    msg = body["choices"][0].get("message") or {}
+    details = (body.get("usage") or {}).get("completion_tokens_details") or {}
+    return 200, bool(msg.get("reasoning") or msg.get("reasoning_content") or "<think>" in (msg.get("content") or "")
+                     or (details.get("reasoning_tokens") or 0) > 0)
+
+
+def probe_reasoning_switch(mid, key):
+    """Does the model reason when the thinking switch is absent, off and on?
+
+    A switch is shown only where off verifiably stops reasoning (see reasoning_rule); "absent" records the
+    upstream default for the report. Each state needs two agreeing answers: True/False, "rejected" (the request
+    fails, e.g. 400 on off), "unstable" (answers disagree) or "error" (only transient failures).
+    """
+    out = {}
+    for name, state in SWITCH_STATES.items():
+        seen = []
+        for _attempt in range(4):
+            status, thinks = _thinks(mid, state, key)
+            if status in (0, 429) or status >= 500:
+                continue
+            seen.append(thinks if status == 200 else "rejected")
+            if len(seen) == 2:
+                break
+        # "unstable" needs two disagreeing answers; fewer means transient failures only ("error" keeps the old result).
+        out[name] = seen[0] if len(seen) == 2 and seen[0] == seen[1] else ("unstable" if len(seen) == 2 else "error")
+    return out
+
+
 def _ask_with_file(m, probe, content, question, key, fmt=None):
     """Send one file + question exactly the way the plugin's route converter builds it; return the answer."""
     from dify_plugin.entities.model.message import TextPromptMessageContent
@@ -441,11 +506,14 @@ def is_transient(result):
 
 
 def probe_model(m, key, checks, old, samples):
-    """Run the `basic` checks (alive, tools, parameters) and/or the `inputs` checks (file modalities)."""
+    """Run the `basic` checks (alive, tools, parameters), `reasoning` (the thinking switch, also part of
+    basic) and/or `inputs` (file modalities)."""
     result = {"checked_at": today()}
     if "basic" in checks:
         result.update(probe_basics(m, key))
     alive = result.get("alive", old.get("alive")) is not False
+    if {"basic", "reasoning"} & set(checks) and alive and m.get("reasoning") and reasoning_switch(m["id"]):
+        result["reasoning_switch"] = probe_reasoning_switch(m["id"], key)
     if "inputs" in checks and alive:
         if m["type"] == "llm":
             result["inputs"], result["input_formats"] = probe_inputs(m, {**old, **result}, key, samples)
@@ -464,7 +532,7 @@ def probe_basics(m, key):
     # The catalog keeps listing some retired models; a plain request tells us.
     status, body = _post("/api/v1/chat/completions", {
         "model": mid, "max_tokens": 16, "messages": [{"role": "user", "content": "hi"}]}, key)
-    dead = status in (400, 404, 500) and re.search(r"deprecated|no longer available|does not exist|not found", str(body), re.I)
+    dead = status in (400, 404, 500) and re.search(r"deprecated|no longer available|does not exist|not found|model is not valid", str(body), re.I)
     result["alive"] = not dead
     if dead:
         result["error"] = re.sub(r"\s*\(request_id[^)]*\)", "", str(body))[:200]
@@ -477,7 +545,7 @@ def probe_basics(m, key):
         if status == 200:
             calls = (body["choices"][0].get("message") or {}).get("tool_calls")
             result["tools"] = "called" if calls else "ignored"
-        else:
+        elif not (status in (0, 429) or status >= 500):  # a rate limit or outage says nothing; keep the old result
             result["tools"] = f"rejected:{status}"
         if mid.startswith("openai/") and m.get("reasoning"):
             ok = []
@@ -500,6 +568,23 @@ def probe_basics(m, key):
     return result
 
 
+def merge_probe(prev, res):
+    """A new probe result over the previous one. A rate limit or outage says nothing about support, so a
+    transient failure keeps the earlier answer: per input (with its format) and per thinking-switch state."""
+    merged = {**prev, **res}
+    if res.get("alive"):
+        merged.pop("error", None)
+    if res.get("reasoning_switch"):
+        old_sw = prev.get("reasoning_switch") or {}
+        merged["reasoning_switch"] = {k: old_sw.get(k, v) if v == "error" else v for k, v in res["reasoning_switch"].items()}
+    for k, v in (res.get("inputs") or {}).items():
+        if is_transient(v) and (prev.get("inputs") or {}).get(k) == "ok":
+            merged["inputs"][k] = "ok"
+            if k in (prev.get("input_formats") or {}):
+                merged["input_formats"][k] = prev["input_formats"][k]
+    return merged
+
+
 def cmd_probe(args):
     key = os.environ.get("ZENMUX_PROBE_API_KEY")
     if not key:
@@ -512,21 +597,16 @@ def cmd_probe(args):
         models = [m for m in models if m["id"] not in probes]
     print(f"probing {len(models)} models ({', '.join(args.checks)}) ...", file=sys.stderr)
     data = load_json(PROBES, {"models": {}})
+    # dify_plugin monkey-patches threading (gevent) on import, which breaks or hangs inside a worker thread.
+    sys.path.insert(0, str(ROOT))
+    import importlib
+    for module in ("models.llm.google", "models.llm.openai"):
+        importlib.import_module(module)
     samples = input_samples() if "inputs" in args.checks else {}
     old = data["models"]
     with concurrent.futures.ThreadPoolExecutor(args.workers) as pool:
         for m, res in zip(models, pool.map(lambda x: probe_model(x, key, args.checks, old.get(x["id"], {}), samples), models)):
-            prev = old.get(m["id"], {})
-            merged = {**prev, **res}
-            if res.get("alive"):
-                merged.pop("error", None)
-            # A rate limit or outage says nothing about support: keep an earlier "ok" (and its format).
-            for k, v in (res.get("inputs") or {}).items():
-                if is_transient(v) and (prev.get("inputs") or {}).get(k) == "ok":
-                    merged["inputs"][k] = "ok"
-                    if k in (prev.get("input_formats") or {}):
-                        merged["input_formats"][k] = prev["input_formats"][k]
-            data["models"][m["id"]] = merged
+            data["models"][m["id"]] = merge_probe(old.get(m["id"], {}), res)
             print(f"  {m['id']:45} {json.dumps({k: v for k, v in res.items() if k != 'checked_at'})}", file=sys.stderr)
     data["models"] = dict(sorted(data["models"].items()))
     PROBES.write_text(json.dumps(data, indent=1) + "\n")
@@ -556,9 +636,12 @@ def response_format(options):
 ENABLE_THINKING = {
     "name": "enable_thinking", "type": "boolean", "required": False, "default": False,
     "label": i18n("Thinking Mode", "推理模式"),
-    "help": i18n("Whether to enable thinking mode. Models that always reason ignore this switch.",
-                 "是否启用思考模式。始终推理的模型会忽略此开关。"),
+    "help": i18n("Whether to enable thinking mode.", "是否启用思考模式。"),
 }
+GEMINI_THINKING_MODE = {"name": "thinking_mode", "type": "boolean", "required": False, "default": False,
+                        "label": i18n("Thinking mode", "思考模式"),
+                        "help": i18n("Turn thinking on/off. On without a budget means dynamic thinking.",
+                                     "是否开启思考。开启且未设置预算时为动态预算。")}
 HIDE_REASONING = {
     "name": "exclude_reasoning_tokens", "type": "boolean", "required": False, "default": False,
     "label": i18n("Hide the thought process", "隐藏思考过程"),
@@ -578,10 +661,30 @@ def verified_inputs(m, probe):
 
 # The website's `supported_parameters` lists are incomplete (every parameter it omitted was accepted when
 # probed), so they never remove a parameter: dropping one silently discards it from saved workflows.
-def generic_rules(m, max_out):
+def switch_works(probe):
+    """Per probe_reasoning_switch: None = not probed; True = "off" verifiably stops reasoning on a model that
+    reasons; False otherwise (off ignored, rejected or unverified, or the model never reasons)."""
+    sw = probe.get("reasoning_switch")
+    if not sw:
+        return None
+    return sw.get("off") is False and True in (sw.get("absent"), sw.get("on"))
+
+
+def reasoning_rule(rule, probe):
+    """The switch, defaulting to off, only where "off" is verified to work.
+
+    The plugin sends the declared default when the user leaves the switch alone (with_declared_defaults),
+    so every model with a switch behaves the same way untouched: no reasoning unless turned on. Models where
+    off is ignored, rejected, unverified or not probed get no switch; nothing is sent and they reason as
+    upstream does. test_default_contract.py fails on unprobed models, and `check --base` on a switch they had.
+    """
+    return [{**rule, "default": False}] if switch_works(probe) else []
+
+
+def generic_rules(m, max_out, probe):
     rules = [use("temperature"), use("top_p"), max_tokens_rule(max_out), response_format(["text", "json_object"])]
     if m.get("reasoning"):
-        rules.append(ENABLE_THINKING)
+        rules += reasoning_rule(ENABLE_THINKING, probe)
     return rules
 
 
@@ -650,16 +753,13 @@ INCLUDE_THOUGHTS = {"name": "include_thoughts", "type": "boolean", "required": F
                     "help": i18n("Whether to include thoughts in the response.", "是否返回思考过程。")}
 
 
-def gemini_rules(m, max_out):
+def gemini_rules(m, max_out, probe):
     rules = [use("temperature", default=1.0, min=0.0, max=2.0), use("top_p"), TOP_K]
     rules.append(max_tokens_rule(max_out, name="max_output_tokens"))
     if m.get("reasoning"):
         rules.append(INCLUDE_THOUGHTS)
-        if m["id"].startswith("google/gemini-2."):
-            rules.append({"name": "thinking_mode", "type": "boolean", "required": False, "default": True,
-                          "label": i18n("Thinking mode", "思考模式"),
-                          "help": i18n("Turn thinking on/off. On without a budget means dynamic thinking.",
-                                       "是否开启思考。开启且未设置预算时为动态预算。")})
+        if reasoning_switch(m["id"]):
+            rules += reasoning_rule(GEMINI_THINKING_MODE, probe)
             rules.append({"name": "thinking_budget", "type": "int", "required": False, "min": 1, "max": min(32768, max_out),
                           "label": i18n("Thinking budget", "思考预算"),
                           "help": i18n("Thinking token budget; only used when thinking mode is on.", "思考 token 预算，仅在思考模式开启时生效。")})
@@ -721,11 +821,11 @@ def build_llm(m, probe):
     if proto == "anthropic":
         rules = anthropic_rules(m, max_out, probe)
     elif proto == "google":
-        rules = gemini_rules(m, max_out)
+        rules = gemini_rules(m, max_out, probe)
     elif m["id"].startswith("openai/"):
         rules = openai_rules(m, max_out, probe)
     else:
-        rules = generic_rules(m, max_out)
+        rules = generic_rules(m, max_out, probe)
     if m.get("reasoning") and proto in HIDE_REASONING_ROUTES:
         rules.append(HIDE_REASONING)
     removed = set(m.get("params_remove") or [])
@@ -854,6 +954,8 @@ def removal_evidence(kind, name, m, probe):
         return "probe: adaptive thinking (no budget)"
     if kind == "param" and name == "enable_thinking" and probe.get("thinking_off") == "always_on":
         return "probe: thinking cannot be turned off"
+    if kind == "param" and name in ("enable_thinking", "thinking_mode") and switch_works(probe) is False:
+        return f"probe: off is not verified to stop reasoning {probe['reasoning_switch']}"
     return None
 
 
@@ -930,6 +1032,13 @@ def cmd_sync(args):
         lines += ["### Claude thinking off-switch (probe) - check against Anthropic's per-model table "
                   "(platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting)"]
         lines += [f"- `{mid}`: {res}" for mid, res in claude] + [""]
+    switches = [(m["id"], (probes.get(m["id"]) or {}).get("reasoning_switch")) for m in models
+                if m["type"] == "llm" and m.get("reasoning") and reasoning_switch(m["id"])]
+    odd = [(mid, sw) for mid, sw in switches if not sw or any(not isinstance(v, bool) and v != "rejected" for v in sw.values())]
+    if odd:
+        lines += [f"### Thinking switch not fully probed ({len(odd)}) - reasoning when absent / off / on; no switch "
+                  "unless off is verified; re-probe `--checks reasoning`"]
+        lines += [f"- `{mid}`: {json.dumps(sw)}" for mid, sw in odd] + [""]
     unverified = []
     for m in models:
         probe = probes.get(m["id"]) or {}
@@ -978,8 +1087,9 @@ def main():
     p.add_argument("--only", nargs="*", help="regex filters on model id")
     p.add_argument("--all", action="store_true", help="re-probe models that already have results")
     p.add_argument("--workers", type=int, default=4)
-    p.add_argument("--checks", nargs="+", choices=["basic", "inputs"], default=["basic", "inputs"],
-                   help="basic: alive, tools, parameters; inputs: whether listed file modalities really work")
+    p.add_argument("--checks", nargs="+", choices=["basic", "reasoning", "inputs"], default=["basic", "inputs"],
+                   help="basic: alive, tools, parameters (incl. reasoning); reasoning: what the thinking switch "
+                        "really does (absent/off/on); inputs: whether listed file modalities really work")
     s = sub.add_parser("sync")
     s.add_argument("--dry-run", action="store_true")
     s.add_argument("--base", default="origin/main", help="last released state to diff user-facing removals against")

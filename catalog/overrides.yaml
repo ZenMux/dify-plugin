@@ -54,9 +54,6 @@ models:
   minimax/minimax-m3:
     # ZenMux: file input only works on the Anthropic protocol; we route MiniMax via chat completions.
     features_remove: [document]
-  google/gemini-2.5-pro:
-    # Thinking cannot be turned off: "does not support setting thinking_budget to 0" (400), verified 2026-10-07.
-    params_remove: [thinking_mode]
   qwen/qwen3-vl-embedding:
     # Batches over 20 inputs fail: "batch size ... should not be larger than 20" (400), verified 2026-10-07.
     max_chunks: 20

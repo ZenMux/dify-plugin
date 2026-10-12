@@ -190,3 +190,19 @@ def strip_reasoning_text(text):
     """Drop `<think>...</think>` segments from a whole (blocking) reply, like strip_reasoning does for a stream:
     a block left open (reply cut off at max_tokens) is dropped to the end."""
     return re.sub(r"<think>.*?(?:</think>\n*|\Z)", "", text, flags=re.S) if isinstance(text, str) else text
+
+
+# Switches whose untouched behaviour would otherwise be the upstream's own default.
+OWNED_SWITCHES = ("enable_thinking", "thinking_mode")
+
+
+def with_declared_defaults(schema, model_parameters):
+    """Fill in the declared default for switches the user never touched.
+
+    The SDK fills in defaults only for required parameters, so an untouched optional switch arrives
+    absent and the upstream default would apply, while Dify shows the declared default. Sending the
+    declared value makes the request match what Dify shows, whatever the upstream default is.
+    """
+    defaults = {r.name: r.default for r in (schema.parameter_rules if schema else [])
+                if r.name in OWNED_SWITCHES and r.default is not None}
+    return {**defaults, **model_parameters}

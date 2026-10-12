@@ -169,7 +169,7 @@
    "input_formats": {}
   },
   "baidu/ernie-5.0-thinking-preview": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -178,14 +178,24 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "baidu/ernie-5.1": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "baidu/ernie-x1.1-preview": {
    "checked_at": "2026-10-08",
@@ -193,7 +203,7 @@
    "error": "{\"error\":{\"code\":\"500\",\"type\":\"internal_server_error\",\"message\":\"The model does not exist or you do not have access to it.\"}}"
   },
   "bytedance/doubao-seed-1.8": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -202,10 +212,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "bytedance/doubao-seed-2.0-code": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -214,10 +229,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "bytedance/doubao-seed-2.0-lite": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -227,10 +247,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "bytedance/doubao-seed-2.0-mini": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -240,10 +265,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "bytedance/doubao-seed-2.0-pro": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -252,10 +282,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "bytedance/doubao-seed-2.1-pro": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -264,10 +299,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "bytedance/doubao-seed-2.1-turbo": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -276,10 +316,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "bytedance/doubao-seed-character": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -288,19 +333,29 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": false,
+    "off": false,
+    "on": true
    }
   },
   "bytedance/doubao-seed-code": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
     "image": "ok"
    },
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "bytedance/doubao-seed-evolving": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -309,6 +364,11 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "deepseek/deepseek-chat-v3.1": {
@@ -319,44 +379,69 @@
    "input_formats": {}
   },
   "deepseek/deepseek-r1-0528": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "deepseek/deepseek-v3.2": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": false,
+    "off": false,
+    "on": true
+   }
   },
   "deepseek/deepseek-v4-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "deepseek/deepseek-v4-pro": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "deepseek/deepseek-v4.1-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
     "image": "ok"
    },
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "google/gemini-2.5-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "inputs": {
     "audio": "ok",
@@ -364,10 +449,15 @@
     "image": "ok",
     "video": "ok"
    },
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "google/gemini-2.5-flash-lite": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "inputs": {
     "audio": "ok",
@@ -375,10 +465,15 @@
     "image": "ok",
     "video": "ok"
    },
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": false,
+    "off": false,
+    "on": true
+   }
   },
   "google/gemini-2.5-pro": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "inputs": {
     "audio": "ok",
@@ -386,7 +481,12 @@
     "image": "ok",
     "video": "ok"
    },
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": "rejected",
+    "on": true
+   }
   },
   "google/gemini-3-flash-preview": {
    "checked_at": "2026-10-08",
@@ -518,28 +618,43 @@
    "input_formats": {}
   },
   "inclusionai/ling-3.0-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "inclusionai/ling-3.0-flash-fin": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "inclusionai/ling-3.0-flash-sante": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "inclusionai/ling-3.0-flash-vl": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -548,6 +663,11 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "inclusionai/llada2.1-flash": {
@@ -558,18 +678,28 @@
    "input_formats": {}
   },
   "inclusionai/ring-2.6-1t": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "meituan/longcat-2.0": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "meta/llama-3.3-70b-instruct": {
    "checked_at": "2026-10-08",
@@ -588,7 +718,7 @@
    "input_formats": {}
   },
   "meta/muse-spark-1.1": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -600,10 +730,15 @@
    "input_formats": {
     "file": "file",
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "meta/muse-spark-1.2": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -615,10 +750,15 @@
    "input_formats": {
     "file": "file",
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "meta/muse-spark-1.3": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -630,10 +770,15 @@
    "input_formats": {
     "file": "file",
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "meta/muse-spark-1.3-contributor": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "rejected:0",
    "inputs": {
@@ -645,28 +790,48 @@
    "input_formats": {
     "file": "file",
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "mindai/macaron-v1-tall": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "mindai/macaron-v1-venti": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "minimax/minimax-m2": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "minimax/minimax-m2-her": {
    "checked_at": "2026-10-08",
@@ -676,42 +841,67 @@
    "input_formats": {}
   },
   "minimax/minimax-m2.1": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "minimax/minimax-m2.5": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "minimax/minimax-m2.5-lightning": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "minimax/minimax-m2.7": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "minimax/minimax-m2.7-highspeed": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "minimax/minimax-m3": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "ignored",
    "inputs": {
@@ -720,6 +910,11 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "mistralai/mistral-large-2512": {
@@ -733,7 +928,7 @@
    "input_formats": {}
   },
   "moonshotai/kimi-k2.6": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -742,10 +937,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "moonshotai/kimi-k2.7-code": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -754,10 +954,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": "rejected",
+    "on": true
    }
   },
   "moonshotai/kimi-k2.7-code-highspeed": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -766,10 +971,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "moonshotai/kimi-k2.8-preview": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -778,10 +988,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "moonshotai/kimi-k3": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -790,6 +1005,11 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "openai/chat-latest": {
@@ -1365,11 +1585,17 @@
    "input_formats": {}
   },
   "qwen/qwen3-max": {
-   "checked_at": "2026-10-08",
-   "alive": true,
+   "checked_at": "2026-10-12",
+   "alive": false,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": "rejected",
+    "off": "rejected",
+    "on": "rejected"
+   },
+   "error": "{\"error\":{\"code\":\"404\",\"type\":\"invalid_model\",\"message\":\"Requested model is not valid\"}}"
   },
   "qwen/qwen3-rerank": {
    "checked_at": "2026-10-08"
@@ -1380,7 +1606,7 @@
    "image": "mismatch 1/3"
   },
   "qwen/qwen3-vl-plus": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1389,6 +1615,11 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": false,
+    "off": false,
+    "on": true
    }
   },
   "qwen/qwen3-vl-rerank": {
@@ -1396,7 +1627,7 @@
    "image": "ok"
   },
   "qwen/qwen3.5-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1405,10 +1636,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "qwen/qwen3.5-plus": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1417,10 +1653,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "qwen/qwen3.6-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1429,17 +1670,28 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "qwen/qwen3.6-max-preview": {
-   "checked_at": "2026-10-08",
-   "alive": true,
+   "checked_at": "2026-10-12",
+   "alive": false,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": "rejected",
+    "off": "rejected",
+    "on": "rejected"
+   },
+   "error": "{\"error\":{\"code\":\"404\",\"type\":\"invalid_model\",\"message\":\"Requested model is not valid\"}}"
   },
   "qwen/qwen3.6-plus": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1449,10 +1701,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "qwen/qwen3.7-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1461,17 +1718,27 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "qwen/qwen3.7-max": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "qwen/qwen3.7-plus": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1480,17 +1747,27 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "qwen/qwen3.8-2.4t-a95b": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": "rejected",
+    "on": true
+   }
   },
   "qwen/qwen3.8-27b": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1499,10 +1776,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": "unstable"
    }
   },
   "qwen/qwen3.8-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1511,10 +1793,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "qwen/qwen3.8-max": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1523,10 +1810,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "qwen/qwen3.8-max-0902": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1535,10 +1827,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "qwen/qwen3.8-omni-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1549,10 +1846,15 @@
    "input_formats": {
     "audio": "input_audio_uri",
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "sakana/fugu-ultra-v2": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1561,26 +1863,41 @@
    },
    "input_formats": {
     "file": "file"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "sapiens-ai/agnes-2.5-pro": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "rejected:429",
    "inputs": {
     "image": "ok"
    },
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": "error",
+    "on": "error"
+   }
   },
   "stepfun/step-3.5-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "stepfun/step-3.7-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1589,10 +1906,15 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "stepfun/step-5-preview": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1601,21 +1923,36 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "tencent/hy3": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "tencent/hy4-preview": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "x-ai/grok-4.2-fast": {
    "checked_at": "2026-10-08",
@@ -1636,42 +1973,62 @@
    "input_formats": {}
   },
   "x-ai/grok-4.3": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
     "file": "error:400 {\"error\":{\"code\":\"400\",\"type\":\"invalid_params\",\"message\":\"File content is not supported on /v1/chat/",
     "image": "ok"
    },
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "x-ai/grok-4.5": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
     "file": "error:400 {\"error\":{\"code\":\"400\",\"type\":\"invalid_params\",\"message\":\"File content is not supported on /v1/chat/",
     "image": "ok"
    },
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "x-ai/grok-4.6": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
     "image": "ok"
    },
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "x-ai/grok-4.7": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
     "image": "ok"
    },
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
+   }
   },
   "x-ai/grok-build-0.1": {
    "checked_at": "2026-10-08",
@@ -1683,7 +2040,7 @@
    "input_formats": {}
   },
   "xiaomi/mimo-v2.5": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1694,17 +2051,27 @@
    "input_formats": {
     "audio": "input_audio",
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": false,
+    "off": false,
+    "on": true
    }
   },
   "xiaomi/mimo-v2.5-pro": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "xiaomi/mimo-v2.6-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "rejected:0",
    "inputs": {
@@ -1715,10 +2082,15 @@
    "input_formats": {
     "audio": "input_audio",
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "xiaomi/mimo-v2.6-pro": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1729,10 +2101,15 @@
    "input_formats": {
     "audio": "input_audio",
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "xiaomi/mimo-v2.6-pro-ultraspeed": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1743,41 +2120,66 @@
    "input_formats": {
     "audio": "input_audio",
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": true,
+    "on": true
    }
   },
   "z-ai/glm-4.5": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "z-ai/glm-4.5-air": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "z-ai/glm-4.6": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "z-ai/glm-4.6v": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
     "image": "ok",
     "video": "video_url: error:400 {\"error\":{\"code\":\"400\",\"type\":\"invalid_params\",\"message\":\"\u56fe\u7247\u8f93\u5165\u683c\u5f0f/\u89e3\u6790\u9519\u8bef\"}} | file: mismatch: \"I don't have access to video content, so I cannot \""
    },
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "z-ai/glm-4.6v-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1786,28 +2188,48 @@
    },
    "input_formats": {
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   },
   "z-ai/glm-4.7": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "z-ai/glm-4.7-flashx": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "z-ai/glm-5": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "z-ai/glm-5-turbo": {
    "checked_at": "2026-10-08",
@@ -1815,28 +2237,43 @@
    "error": "{\"error\":{\"code\":\"400\",\"type\":\"invalid_params\",\"message\":\"The requested model has been deprecated and is no longer available.\"}}"
   },
   "z-ai/glm-5.1": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "z-ai/glm-5.2": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "z-ai/glm-5.3": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {},
-   "input_formats": {}
+   "input_formats": {},
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
+   }
   },
   "z-ai/glm-5.3-flash": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1847,10 +2284,15 @@
    "input_formats": {
     "file": "file",
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": "rejected",
+    "on": true
    }
   },
   "z-ai/glm-5.3-flashx": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1861,10 +2303,15 @@
    "input_formats": {
     "file": "file",
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": "rejected",
+    "on": true
    }
   },
   "z-ai/glm-5v-turbo": {
-   "checked_at": "2026-10-08",
+   "checked_at": "2026-10-12",
    "alive": true,
    "tools": "called",
    "inputs": {
@@ -1875,6 +2322,11 @@
    "input_formats": {
     "file": "file",
     "video": "video_url"
+   },
+   "reasoning_switch": {
+    "absent": true,
+    "off": false,
+    "on": true
    }
   }
  }

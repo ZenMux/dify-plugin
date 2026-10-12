@@ -37,16 +37,6 @@ parameter_rules:
   options:
   - text
   - json_object
-- name: enable_thinking
-  type: boolean
-  required: false
-  default: false
-  label:
-    en_US: Thinking Mode
-    zh_Hans: 推理模式
-  help:
-    en_US: Whether to enable thinking mode. Models that always reason ignore this switch.
-    zh_Hans: 是否启用思考模式。始终推理的模型会忽略此开关。
 - name: exclude_reasoning_tokens
   type: boolean
   required: false

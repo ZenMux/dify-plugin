@@ -36,7 +36,7 @@ from dify_plugin.interfaces.model.large_language_model import LargeLanguageModel
 from google import genai
 from google.genai import errors, types
 
-from models._common import file_base64, keep_supported_files, vertex_base_url
+from models._common import file_base64, keep_supported_files, vertex_base_url, with_declared_defaults
 
 from .utils import FileCache, UNSUPPORTED_DOCUMENT_TYPES, UNSUPPORTED_EXTENSIONS
 
@@ -868,7 +868,7 @@ class ZenMuxGoogleLargeLanguageModel(LargeLanguageModel):
         schema = self.get_model_schema(model, credentials)
         prompt_messages = keep_supported_files(prompt_messages, schema.features if schema else None)
         return self._generate(
-            model, credentials, prompt_messages, model_parameters, tools, stop, stream, user
+            model, credentials, prompt_messages, with_declared_defaults(schema, model_parameters), tools, stop, stream, user
         )
 
     def _generate(
