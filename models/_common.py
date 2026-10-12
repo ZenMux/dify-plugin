@@ -1,4 +1,5 @@
 import base64
+import re
 from collections.abc import Generator, Mapping
 from decimal import Decimal, InvalidOperation
 
@@ -183,3 +184,9 @@ def strip_reasoning(chunks: Generator[LLMResultChunk, None, None]) -> Generator[
         if text or chunk.delta.message.tool_calls or chunk.delta.usage or chunk.delta.finish_reason:
             chunk.delta.message.content = text
             yield chunk
+
+
+def strip_reasoning_text(text):
+    """Drop `<think>...</think>` segments from a whole (blocking) reply, like strip_reasoning does for a stream:
+    a block left open (reply cut off at max_tokens) is dropped to the end."""
+    return re.sub(r"<think>.*?(?:</think>\n*|\Z)", "", text, flags=re.S) if isinstance(text, str) else text

@@ -21,6 +21,7 @@ from models._common import (
     keep_supported_files,
     openai_base_url,
     strip_reasoning,
+    strip_reasoning_text,
 )
 
 logger = logging.getLogger(__name__)
@@ -127,7 +128,12 @@ class ZenMuxOpenAICCLargeLanguageModel(OAICompatLargeLanguageModel):
             model_parameters.setdefault("stream_options", {})["include_usage"] = True
 
         result = self._generate(model, credentials, prompt_messages, model_parameters, tools, stop, stream, user)
-        return strip_reasoning(result) if stream and hide_reasoning else result
+        if not hide_reasoning:
+            return result
+        if stream:
+            return strip_reasoning(result)
+        result.message.content = strip_reasoning_text(result.message.content)
+        return result
 
     def _create_final_llm_result_chunk(self, *args, **kwargs):
         chunk = super()._create_final_llm_result_chunk(*args, **kwargs)
