@@ -87,13 +87,35 @@ def test_json_schema(llm, model):
     assert json.loads(text.strip().strip("`").removeprefix("json"))["answer"] == 391
 
 
-def test_thinking_shown_and_hidden(llm):
+@pytest.mark.parametrize("stream", [True, False])
+def test_thinking_shown_and_hidden(llm, stream):
     prompt = ask("What is 17*23? Reply with just the number.")
-    shown, _, _ = run(llm, "moonshotai/kimi-k2.6", prompt, {"max_tokens": 1500, "enable_thinking": True})
     hidden, _, _ = run(llm, "moonshotai/kimi-k2.6", prompt,
-                       {"max_tokens": 1500, "enable_thinking": True, "exclude_reasoning_tokens": True})
-    assert "<think>" in shown and "391" in shown
+                       {"max_tokens": 1500, "enable_thinking": True, "exclude_reasoning_tokens": True}, stream=stream)
     assert "<think>" not in hidden and "391" in hidden
+    if stream:  # the SDK keeps reasoning only from streamed replies
+        shown, _, _ = run(llm, "moonshotai/kimi-k2.6", prompt, {"max_tokens": 1500, "enable_thinking": True})
+        assert "<think>" in shown and "391" in shown
+
+
+def _declared_thinking(model):
+    rules = {r["name"]: r for r in yaml.safe_load((LLM_DIR / f"{model.split('/', 1)[1]}.yaml").read_text())["parameter_rules"]}
+    return rules["enable_thinking"]["default"] if "enable_thinking" in rules else None
+
+
+@pytest.mark.parametrize("model", [
+    "deepseek/deepseek-v4-flash",  # reasons by default upstream: the plugin sends the declared off
+    "deepseek/deepseek-v3.2",      # does not reason by default upstream: declared off as well
+    "minimax/minimax-m2",          # cannot turn reasoning off: no switch, reasons
+])
+def test_untouched_thinking_switch_does_what_the_yaml_shows(llm, model):
+    # No parameters = a node the user never touched; Dify shows the declared default (off) or no switch.
+    declared = _declared_thinking(model)
+    assert declared in (False, None)
+    text, _, usage = run(llm, model, ask("What is 17*23? Reply with just the number."), {"max_tokens": 2048})
+    assert ("<think>" in text) is (declared is None), (model, declared, text[:200])
+    assert "391" in text
+    assert_billed(usage)
 
 
 @pytest.mark.parametrize("model,expect", [("anthropic/claude-haiku-4.5", "budget"), ("anthropic/claude-sonnet-5", "adaptive")])
@@ -104,7 +126,8 @@ def test_claude_thinking_styles(llm, model, expect):
     assert_billed(usage)
 
 
-THINKING_OFF = json.loads((Path(__file__).resolve().parents[2] / "models" / "llm" / "_anthropic_thinking.json").read_text())
+LLM_DIR = Path(__file__).resolve().parents[2] / "models" / "llm"
+THINKING_OFF = json.loads((LLM_DIR / "_anthropic_thinking.json").read_text())
 TRICKY = "A bat and a ball cost 1.10 in total. The bat costs 1.00 more than the ball. How much is the ball? Answer with just the number."
 
 
@@ -116,9 +139,10 @@ def test_claude_thinking_switch_off_really_stops_thinking(llm, model):
     assert_billed(usage)
 
 
+@pytest.mark.parametrize("stream", [True, False])
 @pytest.mark.parametrize("model", sorted(m for m, off in THINKING_OFF.items() if off == "always_on"))
-def test_always_on_claude_can_hide_the_thought_process(llm, model):
-    text, _, usage = run(llm, model, ask(TRICKY), {"max_tokens": 4096, "exclude_reasoning_tokens": True})
+def test_always_on_claude_can_hide_the_thought_process(llm, model, stream):
+    text, _, usage = run(llm, model, ask(TRICKY), {"max_tokens": 4096, "exclude_reasoning_tokens": True}, stream=stream)
     assert "<think>" not in text and "0.05" in text, (model, text[:200])
     assert_billed(usage)
 

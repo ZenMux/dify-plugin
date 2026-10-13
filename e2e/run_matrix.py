@@ -18,6 +18,7 @@ import argparse
 import base64
 import os
 import secrets
+import shutil
 import subprocess
 import sys
 import time
@@ -67,6 +68,8 @@ def log(msg):
 def docker_dir(version: str) -> Path:
     repo = CACHE / f"dify-{version}"
     if not (repo / "docker" / "docker-compose.yaml").exists():
+        # macOS clears old files under /tmp but leaves the directories, which breaks a plain re-clone.
+        shutil.rmtree(repo, ignore_errors=True)
         CACHE.mkdir(parents=True, exist_ok=True)
         subprocess.run(["git", "clone", "-q", "--depth", "1", "--branch", version, "--filter=blob:none",
                         "--sparse", "https://github.com/langgenius/dify.git", str(repo)], check=True)
